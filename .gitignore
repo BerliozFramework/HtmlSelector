@@ -1,0 +1,4 @@
+/vendor/
+
+# Dev environment
+.idea
