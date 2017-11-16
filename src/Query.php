@@ -170,20 +170,22 @@ class Query implements \IteratorAggregate, \Countable
         $html = static::stripInvalidXml($html);
         libxml_use_internal_errors(true);
         $domHtml = new \DOMDocument();
-        @$domHtml->loadHTML($html, LIBXML_COMPACT);
+        if (!$domHtml->loadHTML($html, LIBXML_COMPACT)) {
+            throw new QueryException('Unable to parse HTML data.');
+        } else {
+            // Add 'document' root node
+            $nodeDocument = $domHtml->createElement('document');
+            $nodeDocument->setAttribute('dir', 'ltr');
+            while (isset($domHtml->childNodes[0])) {
+                $nodeDocument->appendChild($domHtml->childNodes[0]);
+            }
+            $domHtml->appendChild($nodeDocument);
 
-        // Add 'document' root node
-        $nodeDocument = $domHtml->createElement('document');
-        $nodeDocument->setAttribute('dir', 'ltr');
-        while (isset($domHtml->childNodes[0])) {
-            $nodeDocument->appendChild($domHtml->childNodes[0]);
+            // Convert \DOMDocument to \SimpleXMLElement object
+            $simpleXml = simplexml_import_dom($domHtml);
+
+            return new Query($simpleXml);
         }
-        $domHtml->appendChild($nodeDocument);
-
-        // Convert \DOMDocument to \SimpleXMLElement object
-        $simpleXml = simplexml_import_dom($domHtml);
-
-        return new Query($simpleXml);
     }
 
     /**
@@ -196,7 +198,6 @@ class Query implements \IteratorAggregate, \Countable
     private static function stripInvalidXml($xml)
     {
         $ret = "";
-        $current = null;
 
         if (empty($xml)) {
             return $ret;
@@ -541,7 +542,8 @@ EOD;
 
         if (count($classes) > 0) {
             // Make selector
-            $selector = implode(array_map(
+            $selector = implode('',
+                                array_map(
                                     function ($class) {
                                         return sprintf('[class~="%s"]', $class);
                                     },
@@ -550,7 +552,7 @@ EOD;
 
             // Check all elements
             foreach ($this->simpleXml as $simpleXml) {
-                if ($test = $simpleXml->xpath($selector->xpath(Selector::CONTEXT_SELF))) {
+                if (count($simpleXml->xpath($selector->xpath(Selector::CONTEXT_SELF))) > 0) {
                     return true;
                 }
             }
