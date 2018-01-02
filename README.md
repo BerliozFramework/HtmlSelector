@@ -137,6 +137,7 @@ Some default functions are available in Query object to interact with results.
 The functions should have the same result as their counterparts on jQuery.
 
 - **attr(name)**: get attribute value
+- **attr(name, value)**: set attribute value
 - **children()**: get children of elements in result.
 - **count()**: count the number of elements in query result.
 - **data(nameOfData)**: get data value (name is with camelCase syntax without the 'data-' prefix).
@@ -156,6 +157,7 @@ The functions should have the same result as their counterparts on jQuery.
 - **prev(selector)**: get prev element after each elements in result.
 - **prevAll(selector)**: get all prev elements after each elements in result.
 - **prop(name)**: get property boolean value of an attribute, used for example for `disabled` attribute.
+- **prop(name, value)**: set property boolean value of an attribute, used for example for `disabled` attribute.
 - **serialize()**: serialize input values of a form. Return a string.
 - **serializeArray()**: serialize input values of a form. Return an array.
 - **text()**: get text of each elements concatenated. 

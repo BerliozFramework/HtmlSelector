@@ -135,7 +135,12 @@ class QueryTest extends TestCase
         // attr()
         $result = $query->find('main p:first');
         $this->assertEquals('en-us', $result->attr('lang'), (string) $result->getSelector());
+        $this->assertEquals('center', $result->attr('align'), (string) $result->getSelector());
+        $result->attr('align', 'left');
+        $this->assertEquals('left', $result->attr('align'), (string) $result->getSelector());
         $this->assertNull($result->attr('test'), (string) $result->getSelector());
+        $result->attr('valign', 'top');
+        $this->assertEquals('top', $result->attr('valign'), (string) $result->getSelector());
 
         // prop()
         $result = $query->find('#formTest [name=checkbox1]');
@@ -147,6 +152,10 @@ class QueryTest extends TestCase
         $result = $query->find('#formTest [name=checkbox4]');
         $this->assertTrue($result->prop('required'), (string) $result->getSelector());
         $result = $query->find('#formTest [name=checkbox5]');
+        $this->assertTrue($result->prop('disabled'), (string) $result->getSelector());
+        $result->prop('disabled', false);
+        $this->assertFalse($result->prop('disabled'), (string) $result->getSelector());
+        $result->prop('disabled', true);
         $this->assertTrue($result->prop('disabled'), (string) $result->getSelector());
 
         // data()

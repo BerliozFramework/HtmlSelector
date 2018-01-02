@@ -40,6 +40,7 @@ class QueryIterator implements \SeekableIterator, \Countable
      * Return the current element.
      *
      * @return Query Can return any type.
+     * @throws \Berlioz\HtmlSelector\Exception\QueryException
      * @link http://php.net/manual/en/iterator.current.php
      */
     public function current()
@@ -95,6 +96,7 @@ class QueryIterator implements \SeekableIterator, \Countable
      * Count elements of an object.
      *
      * @return int
+     * @throws \Berlioz\HtmlSelector\Exception\QueryException
      * @link http://php.net/manual/en/countable.count.php
      */
     public function count()

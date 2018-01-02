@@ -39,6 +39,7 @@ class Query implements \IteratorAggregate, \Countable
      * @param int                                         $selectorContext Context of selector
      *
      * @throws \InvalidArgumentException if bad arguments given.
+     * @throws \Berlioz\HtmlSelector\Exception\QueryException
      */
     public function __construct($element, $selector = null, int $selectorContext = Selector::CONTEXT_ALL)
     {
@@ -282,6 +283,7 @@ class Query implements \IteratorAggregate, \Countable
      * @param string|Query|null $selector Selector
      *
      * @return int
+     * @throws \Berlioz\HtmlSelector\Exception\QueryException
      */
     public function index($selector = null): int
     {
@@ -333,6 +335,7 @@ class Query implements \IteratorAggregate, \Countable
      * @param string|Query $selector Selector
      *
      * @return bool
+     * @throws \Berlioz\HtmlSelector\Exception\QueryException
      */
     public function is($selector): bool
     {
@@ -478,51 +481,84 @@ EOD;
     }
 
     /**
-     * Get attribute value of the first element, null if attribute undefined.
+     * Get/Set attribute value of the first element, null if attribute undefined.
      *
-     * @param string $name
+     * @param string      $name  Name
+     * @param string|null $value Value
      *
-     * @return null|string
+     * @return null|string|\Berlioz\HtmlSelector\Query
      */
-    public function attr(string $name): ?string
+    public function attr(string $name, string $value = null)
     {
         if (isset($this->simpleXml[0])) {
-            return $this->simpleXml[0]->attributes()->{$name} ?? null;
-        }
+            if (!is_null($value)) {
+                if (isset($this->simpleXml[0]->attributes()->{$name})) {
+                    $this->simpleXml[0]->attributes()->{$name} = $value;
+                } else {
+                    $this->simpleXml[0]->addAttribute($name, $value);
+                }
 
-        return null;
+                return $this;
+            } else {
+                return $this->simpleXml[0]->attributes()->{$name} ?? null;
+            }
+        } else {
+            if (!is_null($value)) {
+                return $this;
+            } else {
+                return null;
+            }
+        }
     }
 
     /**
-     * Get property value of attribute of the first element, false if attribute undefined.
+     * Get/Set property value of attribute of the first element, false if attribute undefined.
      *
-     * @param string $name
+     * @param string    $name  Name
+     * @param bool|null $value Value
      *
-     * @return bool
+     * @return bool|\Berlioz\HtmlSelector\Query
      */
-    public function prop(string $name): bool
+    public function prop(string $name, bool $value = null)
     {
         if (isset($this->simpleXml[0])) {
-            if (isset($this->simpleXml[0]->attributes()->{$name})) {
-                return true;
+            if (!is_null($value)) {
+                if ($value === true) {
+                    if (isset($this->simpleXml[0]->attributes()->{$name})) {
+                        $this->simpleXml[0]->attributes()->{$name} = $name;
+                    } else {
+                        $this->simpleXml[0]->addAttribute($name, $name);
+                    }
+                } else {
+                    unset($this->simpleXml[0]->attributes()->{$name});
+                }
+
+                return $this;
+            } else {
+                return isset($this->simpleXml[0]->attributes()->{$name});
+            }
+        } else {
+            if (!is_null($value)) {
+                return $this;
+            } else {
+                return false;
             }
         }
-
-        return false;
     }
 
     /**
      * Get data value.
      *
-     * @param string $name Name of data with camelCase syntax
+     * @param string      $name  Name of data with camelCase syntax
+     * @param string|null $value Value
      *
-     * @return null|string
+     * @return null|string|\Berlioz\HtmlSelector\Query
      */
-    public function data(string $name): ?string
+    public function data(string $name, string $value = null): ?string
     {
         $name = mb_strtolower(preg_replace('/([a-z0-9])([A-Z])/', '\\1-\\2', $name));
 
-        return $this->attr(sprintf('data-%s', $name));
+        return $this->attr(sprintf('data-%s', $name), $value);
     }
 
     /**

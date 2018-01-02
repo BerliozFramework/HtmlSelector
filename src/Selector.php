@@ -662,6 +662,7 @@ EOD;
      * @param int $context Context (checks constants)
      *
      * @return string
+     * @throws \Berlioz\HtmlSelector\Exception\SelectorException
      * @throws \InvalidArgumentException if a bad context chosen.
      */
     public function xpath(int $context = Selector::CONTEXT_ALL): string
