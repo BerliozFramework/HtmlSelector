@@ -451,7 +451,7 @@ class Query implements \IteratorAggregate, \Countable
 ~
 (?(DEFINE)
 (?<d_quotes> '(?>[^'\\]++|\\.)*' | "(?>[^"\\]++|\\.)*" )
-    (?<d_tag_content> \g<d_quotes> | [^>] )
+    (?<d_tag_content> \g<d_quotes> | [^>]+ )
     (?<d_tag_open> < \g<d_tag_content>+ > )
     (?<d_tag_close> <\/ \g<d_tag_content> > )
 )
