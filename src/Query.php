@@ -40,6 +40,7 @@ class Query implements \IteratorAggregate, \Countable
      *
      * @throws \InvalidArgumentException if bad arguments given.
      * @throws \Berlioz\HtmlSelector\Exception\QueryException
+     * @throws \Berlioz\HtmlSelector\Exception\SelectorException
      */
     public function __construct($element, $selector = null, int $selectorContext = Selector::CONTEXT_ALL)
     {
@@ -298,7 +299,7 @@ class Query implements \IteratorAggregate, \Countable
             }
 
             if ($selector->isset(0) && ($result = array_search($selector->get(0), $this->get())) !== false) {
-                return $result;
+                return intval($result);
             }
         }
 
@@ -336,6 +337,7 @@ class Query implements \IteratorAggregate, \Countable
      *
      * @return bool
      * @throws \Berlioz\HtmlSelector\Exception\QueryException
+     * @throws \Berlioz\HtmlSelector\Exception\SelectorException
      */
     public function is($selector): bool
     {
@@ -393,6 +395,7 @@ class Query implements \IteratorAggregate, \Countable
      * @param string|null $selector Selector
      *
      * @return \Berlioz\HtmlSelector\Query
+     * @throws \Berlioz\HtmlSelector\Exception\SelectorException
      */
     public function parents(?string $selector = null): Query
     {
@@ -414,6 +417,7 @@ class Query implements \IteratorAggregate, \Countable
      * @param string|null $selector Selector
      *
      * @return \Berlioz\HtmlSelector\Query
+     * @throws \Berlioz\HtmlSelector\Exception\SelectorException
      */
     public function children(?string $selector = null): Query
     {
@@ -554,7 +558,7 @@ EOD;
      *
      * @return null|string|\Berlioz\HtmlSelector\Query
      */
-    public function data(string $name, string $value = null): ?string
+    public function data(string $name, string $value = null)
     {
         $name = mb_strtolower(preg_replace('/([a-z0-9])([A-Z])/', '\\1-\\2', $name));
 
@@ -567,6 +571,7 @@ EOD;
      * @param string $classes Classes separated by space
      *
      * @return bool
+     * @throws \Berlioz\HtmlSelector\Exception\SelectorException
      */
     public function hasClass(string $classes)
     {
@@ -603,6 +608,7 @@ EOD;
      * @param string|null $selector Selector
      *
      * @return \Berlioz\HtmlSelector\Query
+     * @throws \Berlioz\HtmlSelector\Exception\SelectorException
      */
     public function next(string $selector = null): Query
     {
@@ -624,6 +630,7 @@ EOD;
      * @param string|null $selector Selector
      *
      * @return \Berlioz\HtmlSelector\Query
+     * @throws \Berlioz\HtmlSelector\Exception\SelectorException
      */
     public function nextAll(string $selector = null): Query
     {
@@ -645,6 +652,7 @@ EOD;
      * @param string|null $selector Selector
      *
      * @return \Berlioz\HtmlSelector\Query
+     * @throws \Berlioz\HtmlSelector\Exception\SelectorException
      */
     public function prev(string $selector = null): Query
     {
@@ -666,6 +674,7 @@ EOD;
      * @param string|null $selector Selector
      *
      * @return \Berlioz\HtmlSelector\Query
+     * @throws \Berlioz\HtmlSelector\Exception\SelectorException
      */
     public function prevAll(string $selector = null): Query
     {
