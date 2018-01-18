@@ -785,4 +785,28 @@ EOD;
 
         return implode('&', $queryStrings);
     }
+
+    /**
+     * Remove elements.
+     *
+     * @param string|null $selector Selector
+     *
+     * @return \Berlioz\HtmlSelector\Query
+     */
+    public function remove(string $selector = null): Query
+    {
+        if (!is_null($selector)) {
+            $query = $this->filter($selector);
+        } else {
+            $query = $this;
+        }
+
+        /** @var \SimpleXMLElement $simpleXml */
+        foreach ($this->simpleXml as $i => $simpleXml) {
+            $domNode = dom_import_simplexml($simpleXml);
+            $domNode->parentNode->removeChild($domNode);
+        }
+
+        return $query;
+    }
 }
