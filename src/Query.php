@@ -157,6 +157,7 @@ class Query implements \IteratorAggregate, \Countable
      *
      * @return \Berlioz\HtmlSelector\Query
      * @throws \Berlioz\HtmlSelector\Exception\QueryException
+     * @throws \Berlioz\HtmlSelector\Exception\SelectorException
      */
     public static function loadHtml(string $html, bool $isFile = false): Query
     {
@@ -285,6 +286,7 @@ class Query implements \IteratorAggregate, \Countable
      *
      * @return int
      * @throws \Berlioz\HtmlSelector\Exception\QueryException
+     * @throws \Berlioz\HtmlSelector\Exception\SelectorException
      */
     public function index($selector = null): int
     {
@@ -312,6 +314,8 @@ class Query implements \IteratorAggregate, \Countable
      * @param string $selector Selector
      *
      * @return \Berlioz\HtmlSelector\Query
+     * @throws \Berlioz\HtmlSelector\Exception\QueryException
+     * @throws \Berlioz\HtmlSelector\Exception\SelectorException
      */
     public function find(string $selector): Query
     {
@@ -324,6 +328,8 @@ class Query implements \IteratorAggregate, \Countable
      * @param string $selector Selector
      *
      * @return \Berlioz\HtmlSelector\Query
+     * @throws \Berlioz\HtmlSelector\Exception\QueryException
+     * @throws \Berlioz\HtmlSelector\Exception\SelectorException
      */
     public function filter(string $selector): Query
     {
@@ -367,6 +373,8 @@ class Query implements \IteratorAggregate, \Countable
      * @param string $selector Selector
      *
      * @return \Berlioz\HtmlSelector\Query
+     * @throws \Berlioz\HtmlSelector\Exception\QueryException
+     * @throws \Berlioz\HtmlSelector\Exception\SelectorException
      */
     public function not(string $selector): Query
     {
@@ -377,6 +385,8 @@ class Query implements \IteratorAggregate, \Countable
      * Get parent of currents elements.
      *
      * @return \Berlioz\HtmlSelector\Query
+     * @throws \Berlioz\HtmlSelector\Exception\QueryException
+     * @throws \Berlioz\HtmlSelector\Exception\SelectorException
      */
     public function parent(): Query
     {
@@ -395,6 +405,7 @@ class Query implements \IteratorAggregate, \Countable
      * @param string|null $selector Selector
      *
      * @return \Berlioz\HtmlSelector\Query
+     * @throws \Berlioz\HtmlSelector\Exception\QueryException
      * @throws \Berlioz\HtmlSelector\Exception\SelectorException
      */
     public function parents(?string $selector = null): Query
@@ -417,6 +428,7 @@ class Query implements \IteratorAggregate, \Countable
      * @param string|null $selector Selector
      *
      * @return \Berlioz\HtmlSelector\Query
+     * @throws \Berlioz\HtmlSelector\Exception\QueryException
      * @throws \Berlioz\HtmlSelector\Exception\SelectorException
      */
     public function children(?string $selector = null): Query
@@ -608,6 +620,7 @@ EOD;
      * @param string|null $selector Selector
      *
      * @return \Berlioz\HtmlSelector\Query
+     * @throws \Berlioz\HtmlSelector\Exception\QueryException
      * @throws \Berlioz\HtmlSelector\Exception\SelectorException
      */
     public function next(string $selector = null): Query
@@ -630,6 +643,7 @@ EOD;
      * @param string|null $selector Selector
      *
      * @return \Berlioz\HtmlSelector\Query
+     * @throws \Berlioz\HtmlSelector\Exception\QueryException
      * @throws \Berlioz\HtmlSelector\Exception\SelectorException
      */
     public function nextAll(string $selector = null): Query
@@ -652,6 +666,7 @@ EOD;
      * @param string|null $selector Selector
      *
      * @return \Berlioz\HtmlSelector\Query
+     * @throws \Berlioz\HtmlSelector\Exception\QueryException
      * @throws \Berlioz\HtmlSelector\Exception\SelectorException
      */
     public function prev(string $selector = null): Query
@@ -674,6 +689,7 @@ EOD;
      * @param string|null $selector Selector
      *
      * @return \Berlioz\HtmlSelector\Query
+     * @throws \Berlioz\HtmlSelector\Exception\QueryException
      * @throws \Berlioz\HtmlSelector\Exception\SelectorException
      */
     public function prevAll(string $selector = null): Query
@@ -751,6 +767,8 @@ EOD;
      * Typically, the function is called on main form elements, but can be called on input elements.
      *
      * @return array
+     * @throws \Berlioz\HtmlSelector\Exception\QueryException
+     * @throws \Berlioz\HtmlSelector\Exception\SelectorException
      */
     public function serializeArray()
     {
@@ -773,6 +791,8 @@ EOD;
      * Encode form elements as a string for HTTP submission.
      *
      * @return string
+     * @throws \Berlioz\HtmlSelector\Exception\QueryException
+     * @throws \Berlioz\HtmlSelector\Exception\SelectorException
      */
     public function serialize()
     {
@@ -792,6 +812,8 @@ EOD;
      * @param string|null $selector Selector
      *
      * @return \Berlioz\HtmlSelector\Query
+     * @throws \Berlioz\HtmlSelector\Exception\QueryException
+     * @throws \Berlioz\HtmlSelector\Exception\SelectorException
      */
     public function remove(string $selector = null): Query
     {

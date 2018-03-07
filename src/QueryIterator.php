@@ -41,6 +41,7 @@ class QueryIterator implements \SeekableIterator, \Countable
      *
      * @return Query Can return any type.
      * @throws \Berlioz\HtmlSelector\Exception\QueryException
+     * @throws \Berlioz\HtmlSelector\Exception\SelectorException
      * @link http://php.net/manual/en/iterator.current.php
      */
     public function current()
