@@ -310,6 +310,14 @@ class QueryTest extends TestCase
         $this->assertEquals('Link 4.3', (string) $result->get(2), (string) $result->getSelector());
         $result = $query->find('footer ul:has(li:count(3))');
         $this->assertCount(1, $result, (string) $result->getSelector());
+        $result = $query->find('footer ul:has(li:count(>=3))');
+        $this->assertCount(2, $result, (string) $result->getSelector());
+        $result = $query->find('footer ul:has(li:count(=3))');
+        $this->assertCount(1, $result, (string) $result->getSelector());
+        $result = $query->find('footer ul:has(li:count(>3))');
+        $this->assertCount(1, $result, (string) $result->getSelector());
+        $result = $query->find('footer ul:has(li:count(<3))');
+        $this->assertCount(2, $result, (string) $result->getSelector());
 
         // :disabled
         $result = $query->find('main[role=main] :disabled');

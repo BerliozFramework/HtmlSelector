@@ -637,7 +637,28 @@ EOD;
 
                         // Additional pseudo classes (not in CSS specifications)
                         case 'count':
-                            $anXpath .= sprintf('[last() = %d]', intval($filter));
+                            switch (substr($filter, 0, 2)) {
+                                case '>=':
+                                    $anXpath .= sprintf('[last() >= %d]', intval(substr($filter, 2)));
+                                    break;
+                                case '<=':
+                                    $anXpath .= sprintf('[last() <= %d]', intval(substr($filter, 2)));
+                                    break;
+                                default:
+                                    switch (substr($filter, 0, 1)) {
+                                        case '>':
+                                            $anXpath .= sprintf('[last() > %d]', intval(substr($filter, 1)));
+                                            break;
+                                        case '<':
+                                            $anXpath .= sprintf('[last() < %d]', intval(substr($filter, 1)));
+                                            break;
+                                        case '=':
+                                            $anXpath .= sprintf('[last() = %d]', intval(substr($filter, 1)));
+                                            break;
+                                        default:
+                                            $anXpath .= sprintf('[last() = %d]', intval($filter));
+                                    }
+                            }
                             break;
 
                         default:
