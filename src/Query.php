@@ -483,14 +483,21 @@ EOD;
     /**
      * Get text of elements and children elements.
      *
+     * @param bool $withChildren With children (default: true)
+     *
      * @return string
      */
-    public function text(): string
+    public function text(bool $withChildren = true): string
     {
         $str = '';
 
+        /** @var \SimpleXMLElement $simpleXml */
         foreach ($this->simpleXml as $simpleXml) {
-            $str .= strip_tags((string) $simpleXml->asXML());
+            if ($withChildren) {
+                $str .= strip_tags((string) $simpleXml->asXML());
+            } else {
+                $str .= (string) $simpleXml;
+            }
         }
 
         return $str;

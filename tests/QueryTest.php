@@ -165,6 +165,8 @@ class QueryTest extends TestCase
         // text()
         $result = $query->find('p:lang(en-us)');
         $this->assertEquals("\n      Use this document as a way to\n      quickly start any new project. All you get is this text and a mostly barebones HTML document.\n    ", $result->text(), (string) $result->getSelector());
+        $result = $query->find('p:lang(en-us)');
+        $this->assertEquals("\n      Use this document as a way to\n       any new project. All you get is this text and a mostly barebones HTML document.\n    ", $result->text(false), (string) $result->getSelector());
 
         // html()
         $result = $query->find('p:lang(en-us)');
