@@ -523,7 +523,11 @@ EOD;
 
                 return $this;
             } else {
-                return $this->simpleXml[0]->attributes()->{$name} ?? null;
+                if ($this->simpleXml[0]->attributes()->{$name}) {
+                    return (string) $this->simpleXml[0]->attributes()->{$name};
+                } else {
+                    return null;
+                }
             }
         } else {
             if (!is_null($value)) {
