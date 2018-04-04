@@ -164,13 +164,13 @@ class QueryTest extends TestCase
 
         // text()
         $result = $query->find('p:lang(en-us)');
-        $this->assertEquals("\n      Use this document as a way to\n      quickly start any new project. All you get is this text and a mostly barebones HTML document.\n    ", $result->text(), (string) $result->getSelector());
+        $this->assertEquals("\n      Usé this document as a way to\n      quickly start any new project. All you get is this text and a mostly barebones HTML document.\n    ", $result->text(), (string) $result->getSelector());
         $result = $query->find('p:lang(en-us)');
-        $this->assertEquals("\n      Use this document as a way to\n       any new project. All you get is this text and a mostly barebones HTML document.\n    ", $result->text(false), (string) $result->getSelector());
+        $this->assertEquals("\n      Usé this document as a way to\n       any new project. All you get is this text and a mostly barebones HTML document.\n    ", $result->text(false), (string) $result->getSelector());
 
         // html()
         $result = $query->find('p:lang(en-us)');
-        $this->assertEquals("\n      Use this document as a way to\n      <strong>quickly start</strong> any new project.<br/> All you get is this text and a mostly barebones HTML document.\n    ", $result->html(), (string) $result->getSelector());
+        $this->assertEquals("\n      Usé this document as a way to\n      <strong>quickly start</strong> any new project.<br/> All you get is this text and a mostly barebones HTML document.\n    ", $result->html(), (string) $result->getSelector());
         $this->assertStringStartsWith("<!DOCTYPE html><html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\"/>", $query->html());
 
         // hasClass()
