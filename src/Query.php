@@ -168,11 +168,16 @@ class Query implements \IteratorAggregate, \Countable
             }
         }
 
-        // Convert HTML string to \DOMDocument
+        // Encoding
+        $encoding = mb_detect_encoding($html) ?? 'ASCII';
+
+        // Prepare html
         $html = str_replace(['&nbsp;', chr(13)], [' ', ''], $html);
         $html = static::stripInvalidXml($html);
+
+        // Convert HTML string to \DOMDocument
         libxml_use_internal_errors(true);
-        $domHtml = new \DOMDocument();
+        $domHtml = new \DOMDocument('1.0', $encoding);
         if (!$domHtml->loadHTML($html, LIBXML_COMPACT)) {
             throw new QueryException('Unable to parse HTML data.');
         } else {
