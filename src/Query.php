@@ -800,6 +800,17 @@ EOD;
             }
         }
 
+        foreach ($this->find('select') as $select) {
+            $opt = $select->find('option[selected]');
+
+            if ($opt->count() == 0) {
+                $opt = $select->find('option:eq(0)');
+            }
+
+            $result[] = ['name'  => $select->attr('name'),
+                         'value' => $opt->attr('value')];
+        }
+
         return $result;
     }
 
