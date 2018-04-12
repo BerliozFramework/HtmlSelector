@@ -746,6 +746,14 @@ EOD;
                     $allSelected = $this->simpleXml[0]->xpath('./option[@selected]');
                     $values = [];
 
+                    if(empty($allSelected)) {
+                        $options = $this->simpleXml[0]->xpath('./option');
+
+                        if(!empty($options)) {
+                            array_push($allSelected, $this->simpleXml[0]->xpath('./option')[0]);
+                        }
+                    }
+
                     foreach ($allSelected as $selected) {
                         if (isset($selected->attributes()->{'value'})) {
                             if (isset($selected->attributes()->{'value'})) {
