@@ -16,7 +16,10 @@ $ composer require berlioz/html-selector
 
 - **PHP** >= 7.1
 - PHP libraries:
-  - **XML**
+  - **dom**
+  - **libxml**
+  - **mbstring**
+  - **simplexml**
 
 ## Usage
 

@@ -10,8 +10,9 @@
  * file that was distributed with this source code, to the root.
  */
 
-namespace Berlioz\HtmlSelector;
+declare(strict_types=1);
 
+namespace Berlioz\HtmlSelector;
 
 use Berlioz\HtmlSelector\Exception\QueryException;
 
