@@ -21,10 +21,13 @@
     }
   },
   "require": {
-    "php": ">=7.1",
-    "ext-xml": "*"
+    "php": "^7.1",
+    "ext-dom": "*",
+    "ext-libxml": "*",
+    "ext-mbstring": "*",
+    "ext-simplexml": "*"
   },
   "require-dev": {
-    "phpunit/phpunit": "~6.3"
+    "phpunit/phpunit": "^7.4"
   }
 }
