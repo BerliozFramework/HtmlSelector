@@ -169,7 +169,7 @@ class Query implements \IteratorAggregate, \Countable
         }
 
         // Encoding
-        $encoding = mb_detect_encoding($html) ?? 'ASCII';
+        $encoding = mb_detect_encoding($html) ? mb_detect_encoding($html) : 'ASCII';
 
         // Prepare html
         $html = str_replace(['&nbsp;', chr(13)], [' ', ''], $html);
