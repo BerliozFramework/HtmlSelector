@@ -650,6 +650,9 @@ EOD;
             $elClasses = array_merge($elClasses, $classes);
             $elClasses = array_unique($elClasses);
 
+            if (is_null($simpleXml->attributes()->class)) {
+                $simpleXml->addAttribute('class', '');
+            }
             $simpleXml->attributes()->class = implode(' ', $elClasses);
         }
 
@@ -675,7 +678,9 @@ EOD;
             $elClasses = array_diff($elClasses, $classes);
             $elClasses = array_unique($elClasses);
 
-            $simpleXml->attributes()->class = implode(' ', $elClasses);
+            if (!is_null($simpleXml->attributes()->class)) {
+                $simpleXml->attributes()->class = implode(' ', $elClasses);
+            }
         }
 
         return $this;
@@ -716,6 +721,9 @@ EOD;
                 unset($elClasses[$foundClass]);
             }
 
+            if (is_null($simpleXml->attributes()->class)) {
+                $simpleXml->addAttribute('class', '');
+            }
             $simpleXml->attributes()->class = implode(' ', $elClasses);
         }
 
