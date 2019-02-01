@@ -595,7 +595,7 @@ EOD;
     }
 
     /**
-     * Has class ?
+     * Has class?
      *
      * @param string $classes Classes separated by space
      *
@@ -629,6 +629,97 @@ EOD;
         }
 
         return false;
+    }
+
+    /**
+     * Add class.
+     *
+     * @param string $classes Classes separated by space
+     *
+     * @return static
+     */
+    public function addClass(string $classes): Query
+    {
+        $classes = explode(' ', $classes);
+        $classes = array_map('trim', $classes);
+
+        foreach ($this->simpleXml as $simpleXml) {
+            $elClasses = (string) ($simpleXml->attributes()->class ?? '');
+            $elClasses = explode(' ', $elClasses);
+            $elClasses = array_map('trim', $elClasses);
+            $elClasses = array_merge($elClasses, $classes);
+            $elClasses = array_unique($elClasses);
+
+            $simpleXml->attributes()->class = implode(' ', $elClasses);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove class.
+     *
+     * @param string $classes Classes separated by space
+     *
+     * @return static
+     */
+    public function removeClass(string $classes): Query
+    {
+        $classes = explode(' ', $classes);
+        $classes = array_map('trim', $classes);
+
+        foreach ($this->simpleXml as $simpleXml) {
+            $elClasses = (string) ($simpleXml->attributes()->class ?? '');
+            $elClasses = explode(' ', $elClasses);
+            $elClasses = array_map('trim', $elClasses);
+            $elClasses = array_diff($elClasses, $classes);
+            $elClasses = array_unique($elClasses);
+
+            $simpleXml->attributes()->class = implode(' ', $elClasses);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Toggle class.
+     *
+     * @param string    $classes Classes separated by space
+     * @param bool|null $test
+     *
+     * @return \Berlioz\HtmlSelector\Query
+     */
+    public function toggleClass(string $classes, bool $test = null): Query
+    {
+        if (!is_null($test)) {
+            if ($test === false) {
+                return $this->removeClass($classes);
+            }
+
+            return $this->addClass($classes);
+        }
+
+        $classes = explode(' ', $classes);
+        $classes = array_map('trim', $classes);
+
+        foreach ($this->simpleXml as $simpleXml) {
+            $elClasses = (string) ($simpleXml->attributes()->class ?? '');
+            $elClasses = explode(' ', $elClasses);
+            $elClasses = array_map('trim', $elClasses);
+
+            foreach ($classes as $class) {
+                if (($foundClass = array_search($class, $elClasses)) === false) {
+                    $elClasses[] = $class;
+                    continue;
+                }
+
+                unset($elClasses[$foundClass]);
+            }
+
+            $simpleXml->attributes()->class = implode(' ', $elClasses);
+        }
+
+        return $this;
     }
 
     /**
@@ -747,10 +838,10 @@ EOD;
                     $allSelected = $this->simpleXml[0]->xpath('./option[@selected]');
                     $values = [];
 
-                    if(empty($allSelected)) {
+                    if (empty($allSelected)) {
                         $options = $this->simpleXml[0]->xpath('./option');
 
-                        if(!empty($options)) {
+                        if (!empty($options)) {
                             array_push($allSelected, $this->simpleXml[0]->xpath('./option')[0]);
                         }
                     }

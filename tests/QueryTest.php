@@ -179,6 +179,26 @@ class QueryTest extends TestCase
         $this->assertTrue($result->hasClass('lead'), (string) $result->getSelector());
         $this->assertFalse($result->hasClass('test'), (string) $result->getSelector());
 
+        // addClass()
+        $result = $query->find('#list1 li');
+        $result->addClass('classAdded1 classAdded2');
+        $this->assertTrue($result->hasClass('classAdded1 classAdded2'), (string) $result->getSelector());
+
+        // removeClass()
+        $result->removeClass('classAdded2');
+        $this->assertTrue($result->hasClass('classAdded1'), (string) $result->getSelector());
+        $this->assertFalse($result->hasClass('classAdded2'), (string) $result->getSelector());
+
+        // toggleClass()
+        $result->toggleClass('classToggled');
+        $this->assertTrue($result->hasClass('classToggled'), (string) $result->getSelector());
+        $result->toggleClass('classToggled', false);
+        $this->assertFalse($result->hasClass('classToggled'), (string) $result->getSelector());
+        $result->toggleClass('classToggled', true);
+        $this->assertTrue($result->hasClass('classToggled'), (string) $result->getSelector());
+        $result->toggleClass('classToggled', true);
+        $this->assertTrue($result->hasClass('classToggled'), (string) $result->getSelector());
+
         // next()
         $result = $query->find('footer > div:last :first-child');
         $result2 = $result->next();
