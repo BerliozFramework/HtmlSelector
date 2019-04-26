@@ -179,7 +179,7 @@ class Query implements \IteratorAggregate, \Countable
         // Convert HTML string to \DOMDocument
         libxml_use_internal_errors(true);
         $domHtml = new \DOMDocument('1.0', $encoding);
-        if (!$domHtml->loadHTML($html, LIBXML_COMPACT)) {
+        if (!$domHtml->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', $encoding), LIBXML_COMPACT)) {
             throw new QueryException('Unable to parse HTML data.');
         } else {
             // Add 'document' root node

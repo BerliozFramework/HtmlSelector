@@ -18,6 +18,14 @@ use PHPUnit\Framework\TestCase;
 
 class QueryTest extends TestCase
 {
+    public function testUtf8()
+    {
+        $query = Query::loadHtml(__DIR__ . '/files/test_utf8.html', true);
+        $result = $query->find('head > title');
+
+        $this->assertEquals('Test éèà', $result->text());
+    }
+
     /**
      * Provider to test HTML files.
      *
