@@ -1,7 +1,8 @@
 {
   "name": "berlioz/html-selector",
   "description": "Berlioz HTML Selector",
-  "minimum-stability": "stable",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "license": "MIT",
   "homepage": "http://www.berlioz-framework.com",
   "authors": [
@@ -25,9 +26,11 @@
     "ext-dom": "*",
     "ext-libxml": "*",
     "ext-mbstring": "*",
-    "ext-simplexml": "*"
+    "ext-simplexml": "*",
+    "psr/http-message": "^1.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "^7.4"
+    "berlioz/http-message": "dev-develop",
+    "phpunit/phpunit": "^7.4 || ^8.0"
   }
 }

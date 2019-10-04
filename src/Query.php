@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Berlioz\HtmlSelector;
 
 use Berlioz\HtmlSelector\Exception\QueryException;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class Query.
@@ -35,9 +36,9 @@ class Query implements \IteratorAggregate, \Countable
     /**
      * Query constructor.
      *
-     * @param Query|\SimpleXMLElement|\SimpleXMLElement[] $element         Element
-     * @param Selector|string                             $selector        Selector
-     * @param int                                         $selectorContext Context of selector
+     * @param Query|\SimpleXMLElement|\SimpleXMLElement[] $element Element
+     * @param Selector|string $selector Selector
+     * @param int $selectorContext Context of selector
      *
      * @throws \InvalidArgumentException if bad arguments given.
      * @throws \Berlioz\HtmlSelector\Exception\QueryException
@@ -58,7 +59,8 @@ class Query implements \IteratorAggregate, \Countable
                         if (!$v instanceof \SimpleXMLElement) {
                             throw new \InvalidArgumentException(sprintf('Element parameter must be a \SimpleXmlElement object (or array of this) or Query object, "%s" given', gettype($v)));
                         }
-                    });
+                    }
+                );
 
                 $elements = $element;
             } else {
@@ -111,8 +113,8 @@ class Query implements \IteratorAggregate, \Countable
     /**
      * __call magic method.
      *
-     * @param string $name      Name
-     * @param array  $arguments Arguments
+     * @param string $name Name
+     * @param array $arguments Arguments
      *
      * @return mixed
      * @throws \Berlioz\HtmlSelector\Exception\QueryException if function not declared
@@ -132,7 +134,7 @@ class Query implements \IteratorAggregate, \Countable
      * Must be a function, the first argument given during call is the Query object.
      * The others arguments, are the arguments given by user.
      *
-     * @param string   $name     Name
+     * @param string $name Name
      * @param callable $callback Callback
      */
     public static function addFunction(string $name, callable $callback): void
@@ -151,16 +153,39 @@ class Query implements \IteratorAggregate, \Countable
     }
 
     /**
-     * Load HTML file.
+     * Load HTML from ResponseInterface.
      *
-     * @param string $html   HTML string.
-     * @param bool   $isFile If first parameter is filename (default: false)
+     * @param \Psr\Http\Message\ResponseInterface Response
      *
      * @return \Berlioz\HtmlSelector\Query
      * @throws \Berlioz\HtmlSelector\Exception\QueryException
      * @throws \Berlioz\HtmlSelector\Exception\SelectorException
      */
-    public static function loadHtml(string $html, bool $isFile = false): Query
+    public static function loadResponse(ResponseInterface $response)
+    {
+        $encoding = null;
+        $contentType = $response->getHeader('Content-Type');
+        if (($contentType = reset($contentType)) !== false) {
+            if (preg_match('/charset=([\w\-]+)/i', $contentType, $matches) === 1) {
+                $encoding = $matches[1];
+            }
+        }
+
+        return static::loadHtml($response->getBody()->getContents(), false, $encoding);
+    }
+
+    /**
+     * Load HTML file.
+     *
+     * @param string $html HTML string.
+     * @param bool $isFile If first parameter is filename (default: false)
+     * @param string|null $encoding Force encoding
+     *
+     * @return \Berlioz\HtmlSelector\Query
+     * @throws \Berlioz\HtmlSelector\Exception\QueryException
+     * @throws \Berlioz\HtmlSelector\Exception\SelectorException
+     */
+    public static function loadHtml(string $html, bool $isFile = false, string $encoding = null): Query
     {
         // Load file
         if ($isFile) {
@@ -170,7 +195,7 @@ class Query implements \IteratorAggregate, \Countable
         }
 
         // Encoding
-        $encoding = mb_detect_encoding($html) ?: 'ASCII';
+        $encoding = $encoding ?? (mb_detect_encoding($html) ?: 'ASCII');
 
         // Prepare html
         $html = str_replace(['&nbsp;', chr(13)], [' ', ''], $html);
@@ -478,7 +503,7 @@ class Query implements \IteratorAggregate, \Countable
 ~ixs
 EOD;
 
-            if (preg_match($regex, (string) $this->simpleXml[0]->asXML(), $matches) === 1) {
+            if (preg_match($regex, (string)$this->simpleXml[0]->asXML(), $matches) === 1) {
                 return $matches['html'] ?? '';
             }
         }
@@ -500,9 +525,9 @@ EOD;
         /** @var \SimpleXMLElement $simpleXml */
         foreach ($this->simpleXml as $simpleXml) {
             if ($withChildren) {
-                $str .= strip_tags((string) $simpleXml->asXML());
+                $str .= strip_tags((string)$simpleXml->asXML());
             } else {
-                $str .= (string) $simpleXml;
+                $str .= (string)$simpleXml;
             }
         }
 
@@ -512,7 +537,7 @@ EOD;
     /**
      * Get/Set attribute value of the first element, null if attribute undefined.
      *
-     * @param string      $name  Name
+     * @param string $name Name
      * @param string|null $value Value
      *
      * @return null|string|\Berlioz\HtmlSelector\Query
@@ -530,7 +555,7 @@ EOD;
                 return $this;
             } else {
                 if ($this->simpleXml[0]->attributes()->{$name}) {
-                    return (string) $this->simpleXml[0]->attributes()->{$name};
+                    return (string)$this->simpleXml[0]->attributes()->{$name};
                 } else {
                     return null;
                 }
@@ -547,7 +572,7 @@ EOD;
     /**
      * Get/Set property value of attribute of the first element, false if attribute undefined.
      *
-     * @param string    $name  Name
+     * @param string $name Name
      * @param bool|null $value Value
      *
      * @return bool|\Berlioz\HtmlSelector\Query
@@ -582,7 +607,7 @@ EOD;
     /**
      * Get data value.
      *
-     * @param string      $name  Name of data with camelCase syntax
+     * @param string $name Name of data with camelCase syntax
      * @param string|null $value Value
      *
      * @return null|string|\Berlioz\HtmlSelector\Query
@@ -612,12 +637,15 @@ EOD;
 
         if (count($classes) > 0) {
             // Make selector
-            $selector = implode('',
-                                array_map(
-                                    function ($class) {
-                                        return sprintf('[class~="%s"]', $class);
-                                    },
-                                    $classes));
+            $selector = implode(
+                '',
+                array_map(
+                    function ($class) {
+                        return sprintf('[class~="%s"]', $class);
+                    },
+                    $classes
+                )
+            );
             $selector = new Selector($selector);
 
             // Check all elements
@@ -644,7 +672,7 @@ EOD;
         $classes = array_map('trim', $classes);
 
         foreach ($this->simpleXml as $simpleXml) {
-            $elClasses = (string) ($simpleXml->attributes()->class ?? '');
+            $elClasses = (string)($simpleXml->attributes()->class ?? '');
             $elClasses = explode(' ', $elClasses);
             $elClasses = array_map('trim', $elClasses);
             $elClasses = array_merge($elClasses, $classes);
@@ -672,7 +700,7 @@ EOD;
         $classes = array_map('trim', $classes);
 
         foreach ($this->simpleXml as $simpleXml) {
-            $elClasses = (string) ($simpleXml->attributes()->class ?? '');
+            $elClasses = (string)($simpleXml->attributes()->class ?? '');
             $elClasses = explode(' ', $elClasses);
             $elClasses = array_map('trim', $elClasses);
             $elClasses = array_diff($elClasses, $classes);
@@ -689,7 +717,7 @@ EOD;
     /**
      * Toggle class.
      *
-     * @param string    $classes Classes separated by space
+     * @param string $classes Classes separated by space
      * @param bool|null $test
      *
      * @return \Berlioz\HtmlSelector\Query
@@ -708,7 +736,7 @@ EOD;
         $classes = array_map('trim', $classes);
 
         foreach ($this->simpleXml as $simpleXml) {
-            $elClasses = (string) ($simpleXml->attributes()->class ?? '');
+            $elClasses = (string)($simpleXml->attributes()->class ?? '');
             $elClasses = explode(' ', $elClasses);
             $elClasses = array_map('trim', $elClasses);
 
@@ -835,11 +863,11 @@ EOD;
                 case 'input':
                     switch ($this->simpleXml[0]->attributes()->{'type'} ?? 'text') {
                         case 'checkbox':
-                            return (string) $this->simpleXml[0]->attributes()->{'value'} ?? null;
+                            return (string)$this->simpleXml[0]->attributes()->{'value'} ?? null;
                         case 'radio':
-                            return (string) $this->simpleXml[0]->attributes()->{'value'} ?? 'on';
+                            return (string)$this->simpleXml[0]->attributes()->{'value'} ?? 'on';
                         default:
-                            return (string) $this->simpleXml[0]->attributes()->{'value'} ?? '';
+                            return (string)$this->simpleXml[0]->attributes()->{'value'} ?? '';
                     }
                     break;
                 case 'select':
@@ -857,12 +885,12 @@ EOD;
                     foreach ($allSelected as $selected) {
                         if (isset($selected->attributes()->{'value'})) {
                             if (isset($selected->attributes()->{'value'})) {
-                                $values[] = (string) $selected->attributes()->{'value'};
+                                $values[] = (string)$selected->attributes()->{'value'};
                             } else {
-                                $values[] = (string) $selected;
+                                $values[] = (string)$selected;
                             }
                         } else {
-                            $values[] = (string) $selected;
+                            $values[] = (string)$selected;
                         }
                     }
 
@@ -876,7 +904,7 @@ EOD;
                         return $values;
                     }
                 case 'textarea':
-                    return (string) $this->simpleXml[0];
+                    return (string)$this->simpleXml[0];
                 default:
                     return null;
             }
@@ -899,12 +927,14 @@ EOD;
         $result = [];
 
         $query = $this->filter('form :input, :input')
-                      ->filter('[name]:enabled:not(:button, :submit, [type=reset], [type="checkbox"]:not(:checked), [type="radio"]:not(:checked))');
+            ->filter('[name]:enabled:not(:button, :submit, [type=reset], [type="checkbox"]:not(:checked), [type="radio"]:not(:checked))');
 
         foreach ($query as $element) {
-            foreach ((array) $element->val() as $value) {
-                $result[] = ['name'  => $element->attr('name'),
-                             'value' => $value];
+            foreach ((array)$element->val() as $value) {
+                $result[] = [
+                    'name' => $element->attr('name'),
+                    'value' => $value,
+                ];
             }
         }
 
