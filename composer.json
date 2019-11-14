@@ -31,6 +31,6 @@
   },
   "require-dev": {
     "berlioz/http-message": "dev-develop",
-    "phpunit/phpunit": "^7.4 || ^8.0"
+    "phpunit/phpunit": "^7.0 || ^8.0"
   }
 }
