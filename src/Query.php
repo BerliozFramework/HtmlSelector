@@ -239,7 +239,7 @@ class Query implements \IteratorAggregate, \Countable
 
         $length = strlen($xml);
         for ($i = 0; $i < $length; $i++) {
-            $current = ord($xml{$i});
+            $current = ord($xml[$i]);
 
             if ((0x9 == $current) ||
                 (0xA == $current) ||
