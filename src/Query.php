@@ -197,6 +197,11 @@ class Query implements \IteratorAggregate, \Countable
         // Encoding
         $encoding = $encoding ?? (mb_detect_encoding($html) ?: 'ASCII');
 
+        // Empty string
+        if (empty($html)) {
+            return new Query(new \SimpleXMLElement('<html></html>'));
+        }
+
         // Prepare html
         $html = str_replace(['&nbsp;', chr(13)], [' ', ''], $html);
         $html = static::stripInvalidXml($html);
