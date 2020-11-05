@@ -1,14 +1,12 @@
 {
   "name": "berlioz/html-selector",
-  "description": "Berlioz HTML Selector",
-  "minimum-stability": "dev",
-  "prefer-stable": true,
+  "description": "Berlioz HTML Selector is a PHP library to do queries on HTML files (converted in SimpleXMLElement object) like jQuery on DOM.",
   "license": "MIT",
   "homepage": "https://getberlioz.com",
   "authors": [
     {
       "name": "Ronan Giron",
-      "email": "ronan.giron@berlioz-framework.com"
+      "email": "ronan@getberlioz.com"
     }
   ],
   "autoload": {
