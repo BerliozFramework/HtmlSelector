@@ -1,5 +1,11 @@
 # Berlioz HTML Selector
 
+[![Latest Version](https://img.shields.io/packagist/v/berlioz/html-selector.svg?style=flat-square)](https://github.com/BerliozFramework/HtmlSelector/releases)
+[![Software license](https://img.shields.io/github/license/BerliozFramework/HtmlSelector.svg?style=flat-square)](https://github.com/BerliozFramework/HtmlSelector/blob/master/LICENSE)
+[![Build Status](https://img.shields.io/travis/com/BerliozFramework/HtmlSelector/master.svg?style=flat-square)](https://travis-ci.com/BerliozFramework/HtmlSelector)
+[![Quality Grade](https://img.shields.io/codacy/grade/d234908cbf01419387c3c1cb9098be7e/master.svg?style=flat-square)](https://www.codacy.com/manual/BerliozFramework/HtmlSelector)
+[![Total Downloads](https://img.shields.io/packagist/dt/berlioz/html-selector.svg?style=flat-square)](https://packagist.org/packages/berlioz/html-selector)
+
 **Berlioz HTML Selector** is a PHP library to do queries on HTML files (converted in SimpleXMLElement object) like *jQuery* on DOM.
 
 ## Installation
