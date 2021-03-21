@@ -10,8 +10,21 @@
  * file that was distributed with this source code, to the root.
  */
 
-$file = __DIR__ . '/../vendor/autoload.php';
-if (!file_exists($file)) {
-    throw new RuntimeException('Install dependencies using composer to run the test suite.');
+declare(strict_types=1);
+
+namespace Berlioz\HtmlSelector\Extension;
+
+use Berlioz\HtmlSelector\PseudoClass\PseudoClassInterface;
+
+/**
+ * Interface ExtensionInterface.
+ */
+interface ExtensionInterface
+{
+    /**
+     * Get pseudo classes.
+     *
+     * @return PseudoClassInterface[]
+     */
+    public function getPseudoClasses(): array;
 }
-$autoload = require_once $file;

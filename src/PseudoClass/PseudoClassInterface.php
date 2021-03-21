@@ -12,22 +12,30 @@
 
 declare(strict_types=1);
 
-namespace Berlioz\HtmlSelector\Exception;
+namespace Berlioz\HtmlSelector\PseudoClass;
 
 use Berlioz\HtmlSelector\CssSelector\CssSelector;
 
-class SelectorException extends HtmlSelectorException
+/**
+ * Interface PseudoClassInterface.
+ */
+interface PseudoClassInterface
 {
     /**
-     * Unknown pseudo class.
+     * Get name.
      *
-     * @param string $name
+     * @return string
+     */
+    public function getName(): string;
+
+    /**
+     * Build xpath.
+     *
+     * @param string $xpath
+     * @param string|null $arguments
      * @param CssSelector $selector
      *
-     * @return static
+     * @return string
      */
-    public static function unknownPseudoClass(string $name, CssSelector $selector): static
-    {
-        return new static(sprintf('Invalid "%s" in selector "%s"', $name, (string)$selector));
-    }
+    public function buildXpath(string $xpath, ?string $arguments, CssSelector $selector): string;
 }

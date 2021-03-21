@@ -20,7 +20,7 @@ $ composer require berlioz/html-selector
 
 ### Dependencies
 
-- **PHP** ^7.1 || ^8.0
+- **PHP** ^8.0
 - PHP libraries:
   - **dom**
   - **libxml**
