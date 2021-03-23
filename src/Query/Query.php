@@ -36,16 +36,37 @@ class Query implements Countable, IteratorAggregate
         $this->html = array_filter($this->html, fn($value) => $value instanceof SimpleXMLElement);
     }
 
-    public function getIterator()
+    /**
+     * @inheritDoc
+     */
+    public function getIterator(): QueryIterator
     {
         return new QueryIterator($this, $this->htmlSelector);
     }
 
+    /**
+     * Get query on selector on specified context.
+     *
+     * @param string $selector
+     * @param string $context
+     *
+     * @return Query
+     * @throws SelectorException
+     */
     protected function query(string $selector, string $context = XpathSolver::CONTEXT_ALL): static
     {
         return new Query($this->selector($selector, $context), $selector, $this->htmlSelector);
     }
 
+    /**
+     * Apply selector on elements.
+     *
+     * @param string $selector
+     * @param string $context
+     *
+     * @return array
+     * @throws SelectorException
+     */
     protected function selector(string $selector, string $context = XpathSolver::CONTEXT_ALL): array
     {
         $xpath = $this->htmlSelector->solveXpath($selector, $context);
@@ -53,6 +74,14 @@ class Query implements Countable, IteratorAggregate
         return $this->xpath($xpath);
     }
 
+    /**
+     * Apply xpath on elements.
+     *
+     * @param string $xpath
+     *
+     * @return array
+     * @throws SelectorException
+     */
     protected function xpath(string $xpath): array
     {
         $result = [];
@@ -131,6 +160,7 @@ class Query implements Countable, IteratorAggregate
      *
      * @return int
      * @throws QueryException
+     * @throws SelectorException
      */
     public function index(Query|string|null $selector = null): int
     {
@@ -170,6 +200,7 @@ class Query implements Countable, IteratorAggregate
      * @param string $selector Selector
      *
      * @return static
+     * @throws SelectorException
      */
     public function find(string $selector): static
     {
@@ -184,6 +215,7 @@ class Query implements Countable, IteratorAggregate
      * @param string $selector Selector
      *
      * @return static
+     * @throws SelectorException
      */
     public function filter(string $selector): static
     {
@@ -197,6 +229,7 @@ class Query implements Countable, IteratorAggregate
      *
      * @return bool
      * @throws QueryException
+     * @throws SelectorException
      */
     public function is(Query|string $selector): bool
     {
@@ -220,6 +253,7 @@ class Query implements Countable, IteratorAggregate
      * @param string $selector Selector
      *
      * @return static
+     * @throws SelectorException
      */
     public function not(string $selector): static
     {
@@ -230,6 +264,7 @@ class Query implements Countable, IteratorAggregate
      * Get parent of currents elements.
      *
      * @return static
+     * @throws SelectorException
      */
     public function parent(): static
     {
@@ -242,6 +277,7 @@ class Query implements Countable, IteratorAggregate
      * @param string|null $selector Selector
      *
      * @return static
+     * @throws SelectorException
      */
     public function parents(?string $selector = null): static
     {
@@ -425,6 +461,7 @@ EOD;
      * @param string $classes Classes separated by space
      *
      * @return bool
+     * @throws SelectorException
      */
     public function hasClass(string $classes): bool
     {
@@ -570,6 +607,7 @@ EOD;
      * @param string|null $selector Selector
      *
      * @return static
+     * @throws SelectorException
      */
     public function next(string $selector = null): static
     {
@@ -582,6 +620,7 @@ EOD;
      * @param string|null $selector Selector
      *
      * @return static
+     * @throws SelectorException
      */
     public function nextAll(string $selector = null): static
     {
@@ -594,6 +633,7 @@ EOD;
      * @param string|null $selector Selector
      *
      * @return static
+     * @throws SelectorException
      */
     public function prev(string $selector = null): static
     {
@@ -606,6 +646,7 @@ EOD;
      * @param string|null $selector Selector
      *
      * @return static
+     * @throws SelectorException
      */
     public function prevAll(string $selector = null): static
     {
@@ -680,6 +721,7 @@ EOD;
      * Typically, the function is called on main form elements, but can be called on input elements.
      *
      * @return array
+     * @throws SelectorException
      */
     public function serializeArray(): array
     {
@@ -708,6 +750,7 @@ EOD;
      * Encode form elements as a string for HTTP submission.
      *
      * @return string
+     * @throws SelectorException
      */
     public function serialize(): string
     {
@@ -727,6 +770,7 @@ EOD;
      * @param string|null $selector Selector
      *
      * @return static
+     * @throws SelectorException
      * @throws QueryException
      */
     public function remove(string $selector = null): static
