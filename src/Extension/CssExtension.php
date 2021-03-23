@@ -273,6 +273,22 @@ class CssExtension implements ExtensionInterface
     }
 
     /**
+     * :not
+     *
+     * @param string $xpath
+     * @param string $arguments
+     *
+     * @return string
+     * @throws SelectorException
+     */
+    public function not(string $xpath, string $arguments): string
+    {
+        $subXpath = $this->htmlSelector->solveXpath($arguments ?? '*', XpathSolver::CONTEXT_SELF);
+
+        return sprintf('%s[not(%s)]', $xpath, $subXpath);
+    }
+
+    /**
      * :only-child
      *
      * @param string $xpath
@@ -359,12 +375,5 @@ class CssExtension implements ExtensionInterface
     public function root(string $xpath): string
     {
         return sprintf('(%s/ancestor::*)[1]/*[1]', $xpath);
-    }
-
-    public function not(string $xpath, string $arguments): string
-    {
-        $subXpath = $this->htmlSelector->solveXpath($arguments ?? '*', XpathSolver::CONTEXT_SELF);
-
-        return sprintf('%s[not(%s)]', $xpath, $subXpath);
     }
 }

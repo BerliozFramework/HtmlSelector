@@ -266,4 +266,17 @@ class QueryExtensionTest extends TestCase
             $extension->image('XPATH')
         );
     }
+
+    public function testCount()
+    {
+        $extension = new QueryExtension(new HtmlSelector());
+
+        $this->assertEquals('XPATH[last() = 2]', $extension->count('XPATH', '2'));
+        $this->assertEquals('XPATH[last() = 2]', $extension->count('XPATH', '= 2'));
+        $this->assertEquals('XPATH[last() != 2]', $extension->count('XPATH', '!= 2'));
+        $this->assertEquals('XPATH[last() > 2]', $extension->count('XPATH', '> 2'));
+        $this->assertEquals('XPATH[last() >= 2]', $extension->count('XPATH', '>= 2'));
+        $this->assertEquals('XPATH[last() < 2]', $extension->count('XPATH', '< 2'));
+        $this->assertEquals('XPATH[last() <= 2]', $extension->count('XPATH', '<= 2'));
+    }
 }
