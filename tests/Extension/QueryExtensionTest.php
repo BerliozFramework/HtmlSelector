@@ -23,7 +23,7 @@ class QueryExtensionTest extends TestCase
     {
         $extension = new QueryExtension(new HtmlSelector());
 
-        $this->assertCount(22, $extension->getPseudoClasses());
+        $this->assertCount(23, $extension->getPseudoClasses());
         $this->assertContainsOnlyInstancesOf(PseudoClassInterface::class, $extension->getPseudoClasses());
     }
 
