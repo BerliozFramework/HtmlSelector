@@ -6,7 +6,7 @@
 [![Quality Grade](https://img.shields.io/codacy/grade/d234908cbf01419387c3c1cb9098be7e/2.x.svg?style=flat-square)](https://www.codacy.com/manual/BerliozFramework/HtmlSelector)
 [![Total Downloads](https://img.shields.io/packagist/dt/berlioz/html-selector.svg?style=flat-square)](https://packagist.org/packages/berlioz/html-selector)
 
-**Berlioz HTML Selector** is a PHP library to do queries on HTML files (converted in SimpleXMLElement object) like *jQuery* on DOM.
+**Berlioz HTML Selector** is a PHP library to do queries on HTML files with CSS selectors like *jQuery* on DOM.
 
 ## Installation
 
@@ -22,21 +22,35 @@ $ composer require berlioz/html-selector
 
 - **PHP** ^8.0
 - PHP libraries:
-  - **dom**
-  - **libxml**
-  - **mbstring**
-  - **simplexml**
+    - **dom**
+    - **libxml**
+    - **mbstring**
+    - **simplexml**
 
 ## Usage
 
 ### Load HTML
 
-You can easy load an HTML string or file with the static function `Query::loadHtml()`.
-For files, use second parameter `isFile` of method.
+You can easily load an HTML string or file with the static function `HtmlSelector::query()`. For files, use second
+parameter `contentsIsFile` of method.
 
 ```php
-$query = Query::loadHtml('<html><body>...</body></html>');
-$query = Query::loadHtml('path-of-my-file/file.html', true);
+$htmlSelector = new \Berlioz\HtmlSelector\HtmlSelector();
+
+$query = $htmlSelector->query('<html><body>...</body></html>');
+$query = $htmlSelector->query('path-of-my-file/file.html', contentsIsFile: true);
+$query = $htmlSelector->query(new SimpleXMLElement(/*...*/));
+```
+
+### Load from `ResponseInterface`
+
+`HtmlSelector::queryFromResponse()` permit loading html of a response body.
+
+```php
+$htmlSelector = new \Berlioz\HtmlSelector\HtmlSelector();
+
+/** @var \Psr\Http\Message\ResponseInterface $response */
+$query = $htmlSelector->queryFromResponse($response);
 ```
 
 ### Do a query
@@ -44,6 +58,7 @@ $query = Query::loadHtml('path-of-my-file/file.html', true);
 It's very simple to query an HTML string with a selector like *jQuery*.
 
 ```php
+/** @var \Berlioz\HtmlSelector\Query\Query $query */
 $query = $query->find('body > .wrapper h2');
 $query = $query->filter(':first');
 ```
@@ -56,7 +71,7 @@ $query = $query->filter(':first');
 - **#id**: selection of an element with it's ID.
 - **.class**: selection of elements with their class.
 - Attributes selections.
-    - **[attribute]**: with attribute 'attribute'. 
+    - **[attribute]**: with attribute 'attribute'.
     - **[attribute=foo]**: value of attribute equals to 'foo'.
     - **[attribute^=foo]**: value of attribute starts with 'foo'.
     - **[attribute$=foo]**: value of attribute ends with 'foo'.
@@ -79,9 +94,11 @@ $query = $query->filter(':first');
 - **:blank**: only elements without child, and no text (except spaces).
 - **:checked**: only elements with attribute `[checked]`.
 - **:dir**: only elements with directional text given (default: ltr).
-- **:disabled**: only elements of type `<button>`, `<input>`, `<optgroup>`, `<select>` or `<textarea>` with `[disabled]` attribute.
+- **:disabled**: only elements of type `<button>`, `<input>`, `<optgroup>`, `<select>` or `<textarea>` with `[disabled]`
+  attribute.
 - **:empty**: only elements without child.
-- **:enabled**: only elements of type `<button>`, `<input>`, `<optgroup>`, `<option>`, `<select>`, `<textarea>`, `<menuitem>` or `<fieldset>` without `[disabled]` attribute.
+- **:enabled**: only elements of type `<button>`, `<input>`, `<optgroup>`, `<option>`, `<select>`, `<textarea>`
+  , `<menuitem>` or `<fieldset>` without `[disabled]` attribute.
 - **:first**: only first result of complete selection.
 - **:first-child**: only firsts children in their parents.
 - **:first-of-type**: only firsts type in their parents.
@@ -89,7 +106,7 @@ $query = $query->filter(':first');
 - **:lang(x)**: only elements with attribute `[lang]` prefixed by or equals to given value.
 - **:last-child**: only lasts in their parents.
 - **:last-of-type**: only lasts type in their parents.
-- **:not(selector, selector)**: filter 'not'. 
+- **:not(selector, selector)**: filter 'not'.
 - **:nth-child()**: *n* elements in selector result.
 - **:nth-last-child()**: *n* elements in selector result, start at end of list.
 - **:nth-of-type()**: *n* elements of given type in selector result.
@@ -106,12 +123,12 @@ $query = $query->filter(':first');
 
 - **:button**: only elements of type `<button>` without attribute value `[type=submit]` or `<input type="button">`.
 - **:checkbox**: only elements with attribute `[type=checkbox]`.
-- **:contains(x)**: only elements who contains text given.
+- **:contains(x)**: only elements who contain text given.
 - **:eq(x)**: only result with index given (index start to 0).
 - **:even**: only even results in selection.
 - **:file**: only elements with attribute `[type=file]`.
-- **:gt(x)**: only result with index greater than index given (index start to 0).
-- **:gte**: only result with index greater than or equal to index given (index start to 0).
+- **:gt(x)**: only result with an index greater than index given (index start to 0).
+- **:gte**: only result with an index greater than or equal to index given (index start to 0).
 - **:header**: only elements of heading, like `<h1>`, `<h2>`...
 - **:image**: only elements with attribute `[type=image]`.
 - **:input**: only elements of type `<input>`, `<textarea>`, `<select>` or `<button>`.
@@ -142,8 +159,8 @@ div#myId.class1.class2[name1=value1][name2=value2]:even:first
 
 ### Default functions
 
-Some default functions are available in Query object to interact with results.
-The functions should have the same result as their counterparts on jQuery.
+Some default functions are available in Query object to interact with results. The functions should have the same result
+as their counterparts on jQuery.
 
 - **attr(name)**: get attribute value
 - **attr(name, value)**: set attribute value
@@ -158,48 +175,16 @@ The functions should have the same result as their counterparts on jQuery.
 - **index(selector)**: get the index of given selector in result elements.
 - **is(selector)**: know if selector valid the least one element in result.
 - **isset(i)**: return boolean to know if an element key exists in result.
-- **next(selector)**: get next element after each elements in result.
-- **nextAll(selector)**: get all next elements after each elements in result.
+- **next(selector)**: get next element after each element in result.
+- **nextAll(selector)**: get all next elements after each element in result.
 - **not(selector)**: filter elements in result.
 - **parent()**: get direct parent of current result of selecting.
 - **parents(selector)**: get all parents of current result of selecting.
-- **prev(selector)**: get prev element after each elements in result.
-- **prevAll(selector)**: get all prev elements after each elements in result.
+- **prev(selector)**: get prev element after each element in result.
+- **prevAll(selector)**: get all prev elements after each element in result.
 - **prop(name)**: get property boolean value of an attribute, used for example for `disabled` attribute.
 - **prop(name, value)**: set property boolean value of an attribute, used for example for `disabled` attribute.
 - **serialize()**: serialize input values of a form. Return a string.
 - **serializeArray()**: serialize input values of a form. Return an array.
-- **text()**: get text of each elements concatenated. 
+- **text()**: get text of each element concatenated.
 - **val()**: get value of a form element.
-
-### User defined functions
-
-You can declare some function like you want with method `Query::addFunction(string $name, callable $callback)`.
-When callback is called, the first parameter given is the Query object.
-
-#### Usage
-
-Declaration:
-
-```php
-// Define function
-Query::addFunction(
-    'test',
-    function (Query $query, string $arg1, string $arg2) {
-        return sprintf("Argument 1: '%s', argument 2: '%s', number of elements: %d.",
-                       $arg1,
-                       $arg2,
-                       count($query));
-    });
-
-// Load HTML file and do query
-$query = Query::loadHtml(__DIR__ . '/file.html', true);
-$result = $query->find('*');
-$result->test('Test 1', 'Test 2');
-```
-
-Output:
-
-```text
-Argument 1: 'Test 1', argument 2: 'Test 2', number of elements: 12.
-```
