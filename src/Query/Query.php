@@ -19,6 +19,7 @@ use Berlioz\HtmlSelector\Exception\QueryException;
 use Berlioz\HtmlSelector\Exception\SelectorException;
 use Berlioz\HtmlSelector\HtmlSelector;
 use Berlioz\HtmlSelector\XpathSolver;
+use Closure;
 use Countable;
 use IteratorAggregate;
 use SimpleXMLElement;
@@ -787,5 +788,30 @@ EOD;
         }
 
         return $query;
+    }
+
+    /**
+     * Map results.
+     *
+     * @param Closure $callback
+     *
+     * @return array
+     */
+    public function map(Closure $callback): array
+    {
+        $result = [];
+
+        foreach ($this as $key => $query) {
+            $tmp = $callback($query, $key);
+
+            if (null !== $key) {
+                $result[$key] = $tmp;
+                continue;
+            }
+
+            $result[] = $tmp;
+        }
+
+        return $result;
     }
 }

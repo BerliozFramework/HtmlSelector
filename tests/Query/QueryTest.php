@@ -13,6 +13,7 @@
 namespace Berlioz\HtmlSelector\Tests\Query;
 
 use Berlioz\HtmlSelector\HtmlSelector;
+use Berlioz\HtmlSelector\Query\Query;
 use PHPUnit\Framework\TestCase;
 
 class QueryTest extends TestCase
@@ -337,6 +338,77 @@ class QueryTest extends TestCase
             'text1=&password1=&text2=&checkbox2=&checkbox3=&radio=radio2&select1%5B%5D=option2&select1%5B%5D=Option+3&textarea1=Text+inside.&file1%5B%5D=&image1=',
             $result->serialize(),
             '"form#formTest".serialize()'
+        );
+    }
+
+    public function testMap()
+    {
+        $htmlSelector = new HtmlSelector();
+        $query = $htmlSelector->query(__DIR__ . '/../files/test.html', true);
+        $result = $query->find('footer > ul li')->map(fn(Query $query) => $query->text());
+
+        $this->assertEquals(
+            [
+                'Link 1.1',
+                'Link 1.2',
+                'Link 1.3',
+                'Link 1.4',
+                'Link 1.5',
+                'Link 1.6',
+                'Link 1.7',
+                'Link 1.8',
+                'Link 1.9',
+                'Link 1.10',
+                'Link 1.11',
+                'Link 1.12',
+                'Link 1.13',
+                'Link 1.14',
+                'Link 2.1',
+                'Link 3.1',
+                'Link 3.2',
+                'Link 4.1',
+                'Link 4.2',
+                'Link 4.3'
+            ],
+            $result
+        );
+    }
+
+    public function testMap_withKey()
+    {
+        $htmlSelector = new HtmlSelector();
+        $query = $htmlSelector->query(__DIR__ . '/../files/test.html', true);
+        $result = $query
+            ->find('footer > ul li')
+            ->map(function (Query $query, &$key) {
+                $key = 'link' . ($key + 1);
+                return $query->text();
+            });
+
+        $this->assertEquals(
+            [
+                'link1' => 'Link 1.1',
+                'link2' => 'Link 1.2',
+                'link3' => 'Link 1.3',
+                'link4' => 'Link 1.4',
+                'link5' => 'Link 1.5',
+                'link6' => 'Link 1.6',
+                'link7' => 'Link 1.7',
+                'link8' => 'Link 1.8',
+                'link9' => 'Link 1.9',
+                'link10' => 'Link 1.10',
+                'link11' => 'Link 1.11',
+                'link12' => 'Link 1.12',
+                'link13' => 'Link 1.13',
+                'link14' => 'Link 1.14',
+                'link15' => 'Link 2.1',
+                'link16' => 'Link 3.1',
+                'link17' => 'Link 3.2',
+                'link18' => 'Link 4.1',
+                'link19' => 'Link 4.2',
+                'link20' => 'Link 4.3'
+            ],
+            $result
         );
     }
 }
