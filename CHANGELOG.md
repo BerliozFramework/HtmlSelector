@@ -10,6 +10,10 @@ use [Keep a Changelog] (http://keepachangelog.com/).
 
 - New method `Query::map(): array` to apply function to all results of query and get array result
 
+### Fixed
+
+- Bad Xpath context in method `Query::is(): bool`
+
 ## [2.0.0-beta1] - 2021-05-11
 
 ### Added

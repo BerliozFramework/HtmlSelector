@@ -236,7 +236,7 @@ class Query implements Countable, IteratorAggregate
     {
         // Selector
         if (!$selector instanceof Query) {
-            $selector = $this->find($selector);
+            $selector = $this->query($selector, XpathSolver::CONTEXT_SELF);
         }
 
         foreach ($this->html as $simpleXml) {

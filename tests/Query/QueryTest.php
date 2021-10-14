@@ -49,6 +49,19 @@ class QueryTest extends TestCase
         $this->assertEquals('Second element of list 1', (string)$result->get(0), (string)$result->getSelector());
     }
 
+    public function testIs()
+    {
+        $htmlSelector = new HtmlSelector();
+        $query = $htmlSelector->query(__DIR__ . '/../files/test.html', true);
+
+        $result = $query->find('[role=main]');
+
+        $this->assertCount(1, $result);
+        $this->assertTrue($result->is('[role=main]'));
+        $this->assertTrue($result->is($result));
+        $this->assertFalse($result->is('[role=fake]'));
+    }
+
     public function testNot()
     {
         $htmlSelector = new HtmlSelector();
