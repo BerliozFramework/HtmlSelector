@@ -105,7 +105,7 @@ class XpathSolver
                 '=' => sprintf('[@%s="%s"]', $attribute['name'], addslashes($attribute['value'])),
                 '^=' => sprintf('[starts-with(@%s, "%s")]', $attribute['name'], addslashes($attribute['value'])),
                 '$=' => sprintf(
-                    '["%2$s" = substring(@%1$s, string-length(@%1$s) - string-length("%2$s") + 1]',
+                    '["%2$s" = substring(@%1$s, string-length(@%1$s) - string-length("%2$s") + 1)]',
                     $attribute['name'],
                     addslashes($attribute['value'])
                 ),

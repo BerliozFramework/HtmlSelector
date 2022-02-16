@@ -43,6 +43,10 @@ class XpathSolverTest extends TestCase
                 'xpath' => './/*[@foo="value"][@bar="value2"]'
             ],
             [
+                'selector' => 'a[href$="php"]',
+                'xpath' => './/a["php" = substring(@href, string-length(@href) - string-length("php") + 1)]'
+            ],
+            [
                 'selector' => '[role=main] ul:eq(0) > li',
                 'xpath' => '(.//*[@role="main"]//ul)[position() = 1]/li'
             ],
