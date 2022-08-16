@@ -300,7 +300,12 @@ class Query implements Countable, IteratorAggregate
         }
 
         return new Query(
-            $this->xpath(sprintf('./child::*[boolean(%s)]', $this->selector($selector, XpathSolver::CONTEXT_SELF))),
+            $this->xpath(
+                sprintf(
+                    './child::*[boolean(%s)]',
+                    $this->selector($selector, XpathSolver::CONTEXT_SELF)[0] ?? '0'
+                )
+            ),
             null,
             $this->htmlSelector
         );
@@ -638,6 +643,13 @@ EOD;
      */
     public function prev(string $selector = null): static
     {
+//        return new Query(
+//            $this->xpath(
+//                sprintf(
+//                    './preceding-sibling::*[1]',
+//                )
+//            ),null, $this->htmlSelector);
+//        $this->xpath();
         return new Query($this->selector($selector ?? '*', XpathSolver::CONTEXT_PREV), null, $this->htmlSelector);
     }
 

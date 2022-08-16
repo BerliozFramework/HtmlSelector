@@ -32,7 +32,7 @@ class XpathSolver
     public const CONTEXT_PARENTS = 'ancestor::';
     public const CONTEXT_NEXT = 'following-sibling::*[1]/self::';
     public const CONTEXT_NEXT_ALL = 'following-sibling::';
-    public const CONTEXT_PREV = 'preceding-sibling::*[last()]/self::';
+    public const CONTEXT_PREV = 'preceding-sibling::*[1]/self::';
     public const CONTEXT_PREV_ALL = 'preceding-sibling::';
 
     protected CssSelectorParser $parser;

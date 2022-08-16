@@ -286,13 +286,16 @@ class QueryTest extends TestCase
         $query = $htmlSelector->query(__DIR__ . '/../files/test.html', true);
 
         $result = $query->find('footer > div:last :last-child');
+
         $result2 = $result->prev();
 
         $this->assertCount(1, $result2, (string)$result2->getSelector());
-        $this->assertEquals('Contact 4', (string)$result2->get(0), (string)$result2->getSelector());
+        $this->assertEquals('Contact 10', (string)$result2->get(0), (string)$result2->getSelector());
 
         $result2 = $result->prev('span');
+        $this->assertCount(1, $result2, (string)$result2->getSelector());
 
+        $result2 = $result->prev('button');
         $this->assertCount(0, $result2, (string)$result2->getSelector());
 
         $result = $query->find('footer > ul:last :eq(1)');
@@ -314,16 +317,19 @@ class QueryTest extends TestCase
         $this->assertEquals('Contact 4', (string)$result2->get(0), (string)$result2->getSelector());
         $this->assertEquals('Contact 5', (string)$result2->get(1), (string)$result2->getSelector());
 
-        $result2 = $result->prev('span');
-
-        $this->assertCount(0, $result2, (string)$result2->getSelector());
-
         $result = $query->find('footer > ul:last :last-child');
         $result = $result->prevAll();
 
         $this->assertCount(2, $result, (string)$result2->getSelector());
         $this->assertEquals('Link 4.1', (string)$result->get(0), (string)$result->getSelector());
         $this->assertEquals('Link 4.2', (string)$result->get(1), (string)$result->getSelector());
+
+        $result = $query->find('footer > div:last :eq(3)');
+        $result = $result->prevAll();
+        $this->assertCount(3, $result, (string)$result->getSelector());
+        $this->assertEquals('Contact 4', (string)$result->get(0), (string)$result->getSelector());
+        $this->assertEquals('Contact 5', (string)$result->get(1), (string)$result->getSelector());
+        $this->assertEquals('Contact 6', (string)$result->get(2), (string)$result->getSelector());
     }
 
     public function testSerializeArray()
