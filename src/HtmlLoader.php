@@ -16,6 +16,7 @@ namespace Berlioz\HtmlSelector;
 
 use Berlioz\HtmlSelector\Exception\LoaderException;
 use DOMDocument;
+use DOMException;
 use SimpleXMLElement;
 
 /**
@@ -100,33 +101,37 @@ class HtmlLoader
         $contents = str_replace(['&nbsp;', chr(13)], [' ', ''], $contents);
         $contents = $this->stripInvalidXml($contents);
 
-        // Convert HTML string to \DOMDocument
-        libxml_use_internal_errors(true);
-        $domHtml = new DOMDocument('1.0', $encoding);
-        if (!$domHtml->loadHTML(mb_convert_encoding($contents, 'HTML-ENTITIES', $encoding), LIBXML_COMPACT)) {
-            throw new LoaderException('Unable to parse HTML data.');
-        }
+        try {
+            // Convert HTML string to \DOMDocument
+            libxml_use_internal_errors(true);
+            $domHtml = new DOMDocument('1.0', $encoding);
+            if (!$domHtml->loadHTML(mb_convert_encoding($contents, 'HTML-ENTITIES', $encoding), LIBXML_COMPACT)) {
+                throw new LoaderException('Unable to parse HTML data.');
+            }
 
-        // Add 'document' root node
-        $nodeDocument = $domHtml->createElement('document');
-        $nodeDocument->setAttribute('dir', 'ltr');
-        while (isset($domHtml->childNodes[0])) {
-            $nodeDocument->appendChild($domHtml->childNodes[0]);
-        }
-        $domHtml->appendChild($nodeDocument);
+            // Add 'document' root node
+            $nodeDocument = $domHtml->createElement('document');
+            $nodeDocument->setAttribute('dir', 'ltr');
+            while (isset($domHtml->childNodes[0])) {
+                $nodeDocument->appendChild($domHtml->childNodes[0]);
+            }
+            $domHtml->appendChild($nodeDocument);
 
-        // Convert \DOMDocument to \SimpleXMLElement object
-        return simplexml_import_dom($domHtml);
+            // Convert \DOMDocument to \SimpleXMLElement object
+            return simplexml_import_dom($domHtml);
+        } catch (DOMException $exception) {
+            throw new LoaderException(previous: $exception);
+        }
     }
 
     /**
      * Strip invalid xml.
      *
-     * @param $xml
+     * @param string $xml
      *
      * @return string
      */
-    private function stripInvalidXml($xml)
+    private function stripInvalidXml(string $xml): string
     {
         if (empty($xml)) {
             return '';

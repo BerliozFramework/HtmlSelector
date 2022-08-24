@@ -33,7 +33,7 @@ class PseudoClassSet
      *
      * @param PseudoClassInterface ...$pseudoClass
      */
-    public function add(PseudoClassInterface ...$pseudoClass)
+    public function add(PseudoClassInterface ...$pseudoClass): void
     {
         array_push($this->pseudoClasses, ...$pseudoClass);
     }

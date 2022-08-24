@@ -53,7 +53,7 @@ class Nth implements PseudoClassInterface
             $xpath = sprintf(
                 '%s[%s]',
                 $xpath,
-                $this->htmlSelector->solveXpath($arguments['selector'] ?? '*', XpathSolver::CONTEXT_SELF)
+                $this->htmlSelector->solveXpath($arguments['selector'], XpathSolver::CONTEXT_SELF)
             );
         }
 

@@ -360,7 +360,7 @@ EOD;
                 continue;
             }
 
-            $str .= (string)$simpleXml;
+            $str .= $simpleXml;
         }
 
         return $str;
@@ -456,7 +456,7 @@ EOD;
      */
     public function data(string $name, string $value = null): static|string|null
     {
-        $name = mb_strtolower(preg_replace('/([a-z0-9])([A-Z])/', '\\1-\\2', $name));
+        $name = mb_strtolower(preg_replace('/([a-z\d])([A-Z])/', '\\1-\\2', $name));
 
         return $this->attr(sprintf('data-%s', $name), $value);
     }
@@ -643,13 +643,6 @@ EOD;
      */
     public function prev(string $selector = null): static
     {
-//        return new Query(
-//            $this->xpath(
-//                sprintf(
-//                    './preceding-sibling::*[1]',
-//                )
-//            ),null, $this->htmlSelector);
-//        $this->xpath();
         return new Query($this->selector($selector ?? '*', XpathSolver::CONTEXT_PREV), null, $this->htmlSelector);
     }
 
@@ -694,7 +687,7 @@ EOD;
                     $options = $this->html[0]->xpath('./option');
 
                     if (!empty($options)) {
-                        array_push($allSelected, $this->html[0]->xpath('./option')[0]);
+                        $allSelected[] = $this->html[0]->xpath('./option')[0];
                     }
                 }
 
@@ -794,7 +787,7 @@ EOD;
         }
 
         /** @var SimpleXMLElement $simpleXml */
-        foreach ($query->get() as $i => $simpleXml) {
+        foreach ($query->get() as $simpleXml) {
             $domNode = dom_import_simplexml($simpleXml);
             $domNode->parentNode->removeChild($domNode);
         }

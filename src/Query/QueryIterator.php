@@ -95,12 +95,12 @@ class QueryIterator implements SeekableIterator, Countable
     /**
      * @inheritDoc
      */
-    public function seek($position): void
+    public function seek(int $offset): void
     {
         if (!$this->query->isset($this->position)) {
-            throw new OutOfBoundsException(sprintf('Invalid seek position (%d)', $position));
+            throw new OutOfBoundsException(sprintf('Invalid seek position (%d)', $offset));
         }
 
-        $this->position = $position;
+        $this->position = $offset;
     }
 }

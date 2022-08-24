@@ -14,6 +14,8 @@ declare(strict_types=1);
 
 namespace Berlioz\HtmlSelector\Exception;
 
-class HtmlSelectorException extends \Exception
+use Exception;
+
+class HtmlSelectorException extends Exception
 {
 }

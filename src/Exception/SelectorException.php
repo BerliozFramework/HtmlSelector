@@ -28,6 +28,6 @@ class SelectorException extends HtmlSelectorException
      */
     public static function unknownPseudoClass(string $name, CssSelector $selector): static
     {
-        return new static(sprintf('Invalid "%s" in selector "%s"', $name, (string)$selector));
+        return new static(sprintf('Invalid "%s" in selector "%s"', $name, $selector));
     }
 }

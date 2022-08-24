@@ -115,14 +115,12 @@ EOD;
 
                 $expression = $this->parseExpression($match['expression']);
 
-                if ($lastExpression) {
-                    $lastExpression->setNext(
-                        new NextCssSelector(
-                            selector: $expression,
-                            predecessor: $match['predecessor'] ?? null
-                        )
-                    );
-                }
+                $lastExpression?->setNext(
+                    new NextCssSelector(
+                        selector: $expression,
+                        predecessor: $match['predecessor'] ?? null
+                    )
+                );
 
                 $expressions[] = $lastExpression = $expression;
             }
