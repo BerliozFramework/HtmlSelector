@@ -2,7 +2,7 @@
 
 [![Latest Version](https://img.shields.io/packagist/v/berlioz/html-selector.svg?style=flat-square)](https://github.com/BerliozFramework/HtmlSelector/releases)
 [![Software license](https://img.shields.io/github/license/BerliozFramework/HtmlSelector.svg?style=flat-square)](https://github.com/BerliozFramework/HtmlSelector/blob/2.x/LICENSE)
-[![Build Status](https://img.shields.io/github/workflow/status/BerliozFramework/HtmlSelector/Tests/2.x.svg?style=flat-square)](https://github.com/BerliozFramework/HtmlSelector/actions/workflows/tests.yml?query=branch%3A2.x)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/BerliozFramework/HtmlSelector/tests.yml?branch=2.x&style=flat-square)](https://github.com/BerliozFramework/HtmlSelector/actions/workflows/tests.yml?query=branch%3A2.x)
 [![Quality Grade](https://img.shields.io/codacy/grade/d234908cbf01419387c3c1cb9098be7e/2.x.svg?style=flat-square)](https://www.codacy.com/manual/BerliozFramework/HtmlSelector)
 [![Total Downloads](https://img.shields.io/packagist/dt/berlioz/html-selector.svg?style=flat-square)](https://packagist.org/packages/berlioz/html-selector)
 
