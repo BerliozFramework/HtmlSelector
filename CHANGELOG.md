@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file. This projec
 to [Semantic Versioning] (http://semver.org/). For change log format,
 use [Keep a Changelog] (http://keepachangelog.com/).
 
+## [2.0.1] - 2022-12-16
+
+### Fixed
+
+- Usage of deprecated function `mb_convert_encoding()` with html-entities (PHP 8.2)
+
 ## [2.0.0] - 2022-08-24
 
 ### Changed

@@ -105,7 +105,8 @@ class HtmlLoader
             // Convert HTML string to \DOMDocument
             libxml_use_internal_errors(true);
             $domHtml = new DOMDocument('1.0', $encoding);
-            if (!$domHtml->loadHTML(mb_convert_encoding($contents, 'HTML-ENTITIES', $encoding), LIBXML_COMPACT)) {
+            $contents = mb_encode_numericentity($contents, array(0x80, 0xff, 0, 0xff), $encoding);
+            if (!$domHtml->loadHTML($contents, LIBXML_COMPACT)) {
                 throw new LoaderException('Unable to parse HTML data.');
             }
 
