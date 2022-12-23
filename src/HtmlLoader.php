@@ -89,8 +89,7 @@ class HtmlLoader
      */
     private function loadSimpleXml(string $contents, ?string $encoding = null): SimpleXMLElement
     {
-        // Encoding
-        $encoding = $encoding ?? (mb_detect_encoding($contents) ?: 'ASCII');
+        $encoding = $encoding ?? mb_detect_encoding($contents) ?: null;
 
         // Empty string
         if (empty($contents)) {
@@ -104,9 +103,8 @@ class HtmlLoader
         try {
             // Convert HTML string to \DOMDocument
             libxml_use_internal_errors(true);
-            $domHtml = new DOMDocument('1.0', $encoding);
-            $contents = mb_encode_numericentity($contents, array(0x80, 0xff, 0, 0xff), $encoding);
-            if (!$domHtml->loadHTML($contents, LIBXML_COMPACT)) {
+            $domHtml = new DOMDocument('1.0', $encoding ?? '');
+            if (!$domHtml->loadHTML($this->fixXmlEncoding($contents, $encoding), LIBXML_COMPACT)) {
                 throw new LoaderException('Unable to parse HTML data.');
             }
 
@@ -123,6 +121,35 @@ class HtmlLoader
         } catch (DOMException $exception) {
             throw new LoaderException(previous: $exception);
         }
+    }
+
+    private function fixXmlEncoding(string $contents, string $encoding): string
+    {
+        // Already xml encoding
+        if (str_contains($contents, '<?xml encoding=')) {
+            return $contents;
+        }
+
+        // HTML meta charset
+        if (str_contains($contents, '<meta charset=')) {
+            return $contents;
+        }
+
+        // HTML meta http-equiv for content-type
+        if (str_contains($contents, '<meta http-equiv="Content-Type"')) {
+            return $contents;
+        }
+
+        // Convert
+        if ($encoding === 'UTF-8') {
+            return mb_encode_numericentity(
+                $contents,
+                include __DIR__ . '/utf8_convmap.php',
+                'UTF-8'
+            );
+        }
+
+        return $contents;
     }
 
     /**
