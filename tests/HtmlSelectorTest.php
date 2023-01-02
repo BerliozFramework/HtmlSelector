@@ -41,7 +41,7 @@ class HtmlSelectorTest extends TestCase
         $htmlSelector = new HtmlSelector();
         $query = $htmlSelector->queryFromResponse(
             new Response(
-                base64_decode(base64_encode('<h1>Ceci est un test avec des accents éèàï</h1>')),
+                base64_decode('PGgxPkNlY2kgZXN0IHVuIHRlc3QgYXZlYyBkZXMgYWNjZW50cyDDqcOow6DDrzwvaDE+DQo='),
                 headers: [
                     'Content-Type' => 'text/html; charset=utf-8'
                 ]
