@@ -89,7 +89,7 @@ class HtmlLoader
      */
     private function loadSimpleXml(string $contents, ?string $encoding = null): SimpleXMLElement
     {
-        $encoding = $encoding ?? mb_detect_encoding($contents) ?: null;
+        $encoding = $encoding ?? mb_detect_encoding($contents) ?: '';
 
         // Empty string
         if (empty($contents)) {
@@ -99,12 +99,13 @@ class HtmlLoader
         // Prepare html
         $contents = str_replace(['&nbsp;', chr(13)], [' ', ''], $contents);
         $contents = $this->stripInvalidXml($contents);
+        $contents = $this->fixXmlEncoding($contents, $encoding);
 
         try {
             // Convert HTML string to \DOMDocument
             libxml_use_internal_errors(true);
             $domHtml = new DOMDocument('1.0', $encoding ?? '');
-            if (!$domHtml->loadHTML($this->fixXmlEncoding($contents, $encoding), LIBXML_COMPACT)) {
+            if (!$domHtml->loadHTML($contents, LIBXML_COMPACT)) {
                 throw new LoaderException('Unable to parse HTML data.');
             }
 
@@ -140,12 +141,15 @@ class HtmlLoader
             return $contents;
         }
 
+        // Add xml tag
+        $contents = '<?xml encoding="' . $encoding . '" ?>' . "\n" . $contents;
+
         // Convert
-        if ($encoding === 'UTF-8') {
+        if (in_array(strtolower($encoding), ['utf-8', 'utf8'])) {
             return mb_encode_numericentity(
                 $contents,
                 include __DIR__ . '/utf8_convmap.php',
-                'UTF-8'
+                'utf-8'
             );
         }
 

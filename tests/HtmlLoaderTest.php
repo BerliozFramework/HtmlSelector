@@ -31,6 +31,16 @@ class HtmlLoaderTest extends TestCase
                 'expected' => 'Ceci est un test avec des accents éèàï',
             ],
             [
+                'file' => __DIR__ . '/files/test_encoding3.html',
+                'selector' => 'body > h1',
+                'expected' => 'Ceci est un test avec des accents éèàï',
+            ],
+            [
+                'file' => __DIR__ . '/files/test_encoding4.html',
+                'selector' => 'h1',
+                'expected' => 'Ceci est un test avec des accents éèàï',
+            ],
+            [
                 'file' => __DIR__ . '/files/test_utf8.html',
                 'selector' => 'body > p',
                 'expected' => 'Test éèà',
