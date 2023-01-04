@@ -13,6 +13,7 @@
 namespace Berlioz\HtmlSelector\Tests;
 
 use Berlioz\HtmlSelector\HtmlSelector;
+use Berlioz\Http\Message\Response;
 use PHPUnit\Framework\TestCase;
 
 class HtmlLoaderTest extends TestCase
@@ -23,7 +24,7 @@ class HtmlLoaderTest extends TestCase
             [
                 'file' => __DIR__ . '/files/test_encoding.html',
                 'selector' => 'body > h1',
-                'expected' => 'Ceci est un test avec des accents ����',
+                'expected' => 'Ceci est un test avec des accents éèàï',
             ],
             [
                 'file' => __DIR__ . '/files/test_encoding2.html',

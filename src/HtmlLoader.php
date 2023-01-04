@@ -89,7 +89,7 @@ class HtmlLoader
      */
     private function loadSimpleXml(string $contents, ?string $encoding = null): SimpleXMLElement
     {
-        $encoding = $encoding ?? mb_detect_encoding($contents) ?: '';
+        $encoding = $encoding ?? mb_detect_encoding($contents, strict: true) ?: '';
 
         // Empty string
         if (empty($contents)) {
@@ -131,6 +131,15 @@ class HtmlLoader
             return $contents;
         }
 
+        // Convert
+        if (in_array(strtolower($encoding), ['utf-8', 'utf8'])) {
+            return mb_encode_numericentity(
+                $contents,
+                include __DIR__ . '/utf8_convmap.php',
+                'utf-8'
+            );
+        }
+
         // HTML meta charset
         if (str_contains($contents, '<meta charset=')) {
             return $contents;
@@ -139,18 +148,6 @@ class HtmlLoader
         // HTML meta http-equiv for content-type
         if (str_contains($contents, '<meta http-equiv="Content-Type"')) {
             return $contents;
-        }
-
-        // Add xml tag
-        $contents = '<?xml encoding="' . $encoding . '" ?>' . "\n" . $contents;
-
-        // Convert
-        if (in_array(strtolower($encoding), ['utf-8', 'utf8'])) {
-            return mb_encode_numericentity(
-                $contents,
-                include __DIR__ . '/utf8_convmap.php',
-                'utf-8'
-            );
         }
 
         return $contents;
