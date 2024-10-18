@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file. This projec
 to [Semantic Versioning] (http://semver.org/). For change log format,
 use [Keep a Changelog] (http://keepachangelog.com/).
 
+## [2.1.0] - 2024-10-18
+
+### Added
+
+- Compatibility with `psr/http-message` ^2.0
+
 ## [2.0.4] - 2023-01-04
 
 ### Fixed
