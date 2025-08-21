@@ -11,15 +11,14 @@ jobs:
         continue-on-error: ${{ !matrix.stable }}
         strategy:
             matrix:
-                php-versions: ['8.0', '8.1', '8.2']
+                php-versions: ['8.0', '8.1', '8.2', '8.3', '8.4']
                 stable: [true]
                 coverage: [true]
                 composer-flags: ['']
 
         steps:
-            - uses: actions/checkout@v2
-              with:
-                fetch-depth: 0
+            - name: 'Checkout code'
+              uses: actions/checkout@v4
 
             - uses: shivammathur/setup-php@v2
               with:
