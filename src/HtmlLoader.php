@@ -131,15 +131,6 @@ class HtmlLoader
             return $contents;
         }
 
-        // Convert
-        if (in_array(strtolower($encoding), ['utf-8', 'utf8'])) {
-            return mb_encode_numericentity(
-                $contents,
-                include __DIR__ . '/utf8_convmap.php',
-                'utf-8'
-            );
-        }
-
         // HTML meta charset
         if (str_contains($contents, '<meta charset=')) {
             return $contents;
@@ -148,6 +139,11 @@ class HtmlLoader
         // HTML meta http-equiv for content-type
         if (str_contains($contents, '<meta http-equiv="Content-Type"')) {
             return $contents;
+        }
+
+        // Force encoding
+        if (in_array(strtolower($encoding), ['utf-8', 'utf8'])) {
+            return '<?xml encoding="utf-8" ?>' . $contents;
         }
 
         return $contents;

@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file. This projec
 to [Semantic Versioning] (http://semver.org/). For change log format,
 use [Keep a Changelog] (http://keepachangelog.com/).
 
+## [2.2.0] - 2025-08-21
+
+### Changed
+
+- Force XML encoding header for UTF-8 content
+
+### Removed
+
+- Remove UTF-8 convmap
+
 ## [2.1.0] - 2024-10-18
 
 ### Added
