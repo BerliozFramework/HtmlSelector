@@ -21,6 +21,7 @@ use Berlioz\HtmlSelector\HtmlSelector;
 use Berlioz\HtmlSelector\XpathSolver;
 use Closure;
 use Countable;
+use DOMDocument;
 use IteratorAggregate;
 use SimpleXMLElement;
 
@@ -335,7 +336,12 @@ class Query implements Countable, IteratorAggregate
 ~ixs
 EOD;
 
-        if (preg_match($regex, (string)$this->html[0]->asXML(), $matches) === 1) {
+        $doc = new DOMDocument('1.0', 'UTF-8');
+        $doc->formatOutput = true;
+        $doc->appendChild($node = $doc->importNode(dom_import_simplexml($this->html[0] ?? new SimpleXMLElement('')), true));
+        $html = $doc->saveHtml($node) ?: '';
+
+        if (preg_match($regex, $html, $matches) === 1) {
             return $matches['html'] ?? '';
         }
 
