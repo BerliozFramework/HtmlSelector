@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file. This projec
 to [Semantic Versioning] (http://semver.org/). For change log format,
 use [Keep a Changelog] (http://keepachangelog.com/).
 
+## [2.2.2] - 2025-09-18
+
+### Fixed
+
+- Regression of `Query::html()` with empty result
+
 ## [2.2.1] - 2025-09-12
 
 ### Fixed

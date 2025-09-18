@@ -21,7 +21,6 @@ use Berlioz\HtmlSelector\HtmlSelector;
 use Berlioz\HtmlSelector\XpathSolver;
 use Closure;
 use Countable;
-use DOMDocument;
 use IteratorAggregate;
 use SimpleXMLElement;
 
@@ -336,16 +335,53 @@ class Query implements Countable, IteratorAggregate
 ~ixs
 EOD;
 
-        $doc = new DOMDocument('1.0', 'UTF-8');
-        $doc->formatOutput = true;
-        $doc->appendChild($node = $doc->importNode(dom_import_simplexml($this->html[0] ?? new SimpleXMLElement('')), true));
-        $html = $doc->saveHtml($node) ?: '';
-
-        if (preg_match($regex, $html, $matches) === 1) {
-            return $matches['html'] ?? '';
+        if (preg_match($regex, (string)$this->html[0]->asXML(), $matches) === 1) {
+            return $this->expandNonVoidSelfClosing($matches['html'] ?? '');
         }
 
         return '';
+    }
+
+    /**
+     * Expand non-void self-closing tags: <i/> -> <i></i>
+     * Keeps HTML5 void elements untouched: br, img, input, ...
+     */
+    private function expandNonVoidSelfClosing(string $html): string
+    {
+        static $void = [
+            'area',
+            'base',
+            'br',
+            'col',
+            'embed',
+            'hr',
+            'img',
+            'input',
+            'link',
+            'meta',
+            'param',
+            'source',
+            'track',
+            'wbr',
+            'command',
+            'keygen',
+        ];
+
+        $pattern = '~<(?P<tag>[a-z][a-z0-9:-]*)(?P<attrs>(?:\s+[^<>]*?)?)\s*/>~i';
+
+        return preg_replace_callback(
+            $pattern,
+            function ($m) use ($void) {
+                $tag = strtolower($m['tag']);
+                if (in_array($tag, $void, true)) {
+                    return $m[0]; // keep void/self-closing tags as-is
+                }
+                $attrs = rtrim($m['attrs'] ?? '');
+
+                return sprintf('<%1$s%2$s></%1$s>', $m['tag'], $attrs);
+            },
+            $html
+        );
     }
 
     /**
