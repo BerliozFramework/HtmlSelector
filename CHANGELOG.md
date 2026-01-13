@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file. This projec
 to [Semantic Versioning] (http://semver.org/). For change log format,
 use [Keep a Changelog] (http://keepachangelog.com/).
 
+## [2.2.3] - 2026-01-13
+
+### Fixed
+
+- Fix deprecated implicitly marking parameter as nullable
+
 ## [2.2.2] - 2025-09-18
 
 ### Fixed

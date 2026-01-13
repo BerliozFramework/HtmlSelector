@@ -416,7 +416,7 @@ EOD;
      *
      * @return static|string|null
      */
-    public function attr(string $name, string $value = null): static|string|null
+    public function attr(string $name, ?string $value = null): static|string|null
     {
         if (isset($this->html[0])) {
             // Setter
@@ -453,7 +453,7 @@ EOD;
      *
      * @return bool|Query
      */
-    public function prop(string $name, bool $value = null): static|bool
+    public function prop(string $name, ?bool $value = null): static|bool
     {
         if (isset($this->html[0])) {
             // Set & Unset
@@ -496,7 +496,7 @@ EOD;
      *
      * @return static|string|null
      */
-    public function data(string $name, string $value = null): static|string|null
+    public function data(string $name, ?string $value = null): static|string|null
     {
         $name = mb_strtolower(preg_replace('/([a-z\d])([A-Z])/', '\\1-\\2', $name));
 
@@ -657,7 +657,7 @@ EOD;
      * @return static
      * @throws SelectorException
      */
-    public function next(string $selector = null): static
+    public function next(?string $selector = null): static
     {
         return new Query($this->selector($selector ?? '*', XpathSolver::CONTEXT_NEXT), null, $this->htmlSelector);
     }
@@ -670,7 +670,7 @@ EOD;
      * @return static
      * @throws SelectorException
      */
-    public function nextAll(string $selector = null): static
+    public function nextAll(?string $selector = null): static
     {
         return new Query($this->selector($selector ?? '*', XpathSolver::CONTEXT_NEXT_ALL), null, $this->htmlSelector);
     }
@@ -683,7 +683,7 @@ EOD;
      * @return static
      * @throws SelectorException
      */
-    public function prev(string $selector = null): static
+    public function prev(?string $selector = null): static
     {
         return new Query($this->selector($selector ?? '*', XpathSolver::CONTEXT_PREV), null, $this->htmlSelector);
     }
@@ -696,7 +696,7 @@ EOD;
      * @return static
      * @throws SelectorException
      */
-    public function prevAll(string $selector = null): static
+    public function prevAll(?string $selector = null): static
     {
         return new Query($this->selector($selector ?? '*', XpathSolver::CONTEXT_PREV_ALL), null, $this->htmlSelector);
     }
@@ -821,7 +821,7 @@ EOD;
      * @throws SelectorException
      * @throws QueryException
      */
-    public function remove(string $selector = null): static
+    public function remove(?string $selector = null): static
     {
         $query = $this;
         if (!is_null($selector)) {
