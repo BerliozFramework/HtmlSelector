@@ -18,7 +18,7 @@
 
 **Berlioz HTML Selector** is a PHP library to do queries on HTML files with CSS selectors like *jQuery* on DOM.
 
-📖 **[Full documentation](https://getberlioz.com/)**
+📖 **[Full documentation](https://getberlioz.com/docs/3.x/components/html-selector)**
 
 ## Installation
 
@@ -30,4 +30,4 @@ $ composer require berlioz/html-selector
 
 ## Documentation
 
-For usage and examples, visit the [official documentation on **getberlioz.com**](https://getberlioz.com/).
+For usage and examples, visit the [official documentation on **getberlioz.com**](https://getberlioz.com/docs/3.x/components/html-selector).
