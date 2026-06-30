@@ -109,7 +109,7 @@ EOD;
             $lastExpression = null;
 
             foreach ($matches as $match) {
-                if (empty(trim($match[0]))) {
+                if (empty(trim((string)$match[0]))) {
                     continue;
                 }
 

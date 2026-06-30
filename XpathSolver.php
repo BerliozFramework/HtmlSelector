@@ -102,24 +102,25 @@ class XpathSolver
         // Attributes
         foreach ($selector->getAttributes() as $attribute) {
             $xpath .= match ($attribute['comparison']) {
-                '=' => sprintf('[@%s="%s"]', $attribute['name'], addslashes($attribute['value'])),
-                '^=' => sprintf('[starts-with(@%s, "%s")]', $attribute['name'], addslashes($attribute['value'])),
+                '=' => sprintf('[@%s="%s"]', $attribute['name'], addslashes((string)$attribute['value'])),
+                '^=' => sprintf('[starts-with(@%s, "%s")]', $attribute['name'],
+                    addslashes((string)$attribute['value'])),
                 '$=' => sprintf(
                     '["%2$s" = substring(@%1$s, string-length(@%1$s) - string-length("%2$s") + 1)]',
                     $attribute['name'],
-                    addslashes($attribute['value'])
+                    addslashes((string)$attribute['value'])
                 ),
-                '*=' => sprintf('[contains(@%s, "%s")]', $attribute['name'], addslashes($attribute['value'])),
-                '!=' => sprintf('[@%s!="%s"]', $attribute['name'], addslashes($attribute['value'])),
+                '*=' => sprintf('[contains(@%s, "%s")]', $attribute['name'], addslashes((string)$attribute['value'])),
+                '!=' => sprintf('[@%s!="%s"]', $attribute['name'], addslashes((string)$attribute['value'])),
                 '~=' => sprintf(
                     '[contains(concat(" ", @%s, " "), " %s ")]',
                     $attribute['name'],
-                    addslashes($attribute['value'])
+                    addslashes((string)$attribute['value'])
                 ),
                 '|=' => sprintf(
                     '[@%1$s = "%2$s" or starts-with(@%1$s, "%2$s")]',
                     $attribute['name'],
-                    addslashes($attribute['value'])
+                    addslashes((string)$attribute['value'])
                 ),
                 default => sprintf('[@%s]', $attribute['name']),
             };

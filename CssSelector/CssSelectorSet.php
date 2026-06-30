@@ -15,11 +15,12 @@ declare(strict_types=1);
 namespace Berlioz\HtmlSelector\CssSelector;
 
 use Countable;
+use Stringable;
 
 /**
  * Class CssSelectorSet.
  */
-class CssSelectorSet implements Countable
+class CssSelectorSet implements Countable, Stringable
 {
     protected array $selectors = [];
 

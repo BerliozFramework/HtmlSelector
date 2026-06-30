@@ -498,7 +498,7 @@ EOD;
      */
     public function data(string $name, ?string $value = null): static|string|null
     {
-        $name = mb_strtolower(preg_replace('/([a-z\d])([A-Z])/', '\\1-\\2', $name));
+        $name = mb_strtolower((string)preg_replace('/([a-z\d])([A-Z])/', '\\1-\\2', $name));
 
         return $this->attr(sprintf('data-%s', $name), $value);
     }
@@ -516,7 +516,7 @@ EOD;
         $classes = explode(' ', $classes);
 
         // Filter values
-        $classes = array_map('trim', $classes);
+        $classes = array_map(trim(...), $classes);
         $classes = array_filter($classes);
 
         if (count($classes) === 0) {
@@ -524,7 +524,7 @@ EOD;
         }
 
         // Make selector
-        $selector = implode(array_map(fn($class) => sprintf('[class~="%s"]', $class), $classes));
+        $selector = implode('', array_map(fn($class) => sprintf('[class~="%s"]', $class), $classes));
 
         return count($this->selector($selector, XpathSolver::CONTEXT_SELF)) > 0;
     }
@@ -539,14 +539,14 @@ EOD;
     public function addClass(string $classes): static
     {
         $classes = explode(' ', $classes);
-        $classes = array_map('trim', $classes);
+        $classes = array_map(trim(...), $classes);
         $classes = array_filter($classes);
         $classes = array_unique($classes);
 
         foreach ($this->html as $simpleXml) {
             $elClasses = (string)($simpleXml->attributes()->class ?? '');
             $elClasses = explode(' ', $elClasses);
-            $elClasses = array_map('trim', $elClasses);
+            $elClasses = array_map(trim(...), $elClasses);
             $elClasses = array_filter($elClasses);
             $elClasses = array_merge($elClasses, $classes);
             $elClasses = array_unique($elClasses);
@@ -572,7 +572,7 @@ EOD;
     public function removeClass(string $classes): static
     {
         $classes = explode(' ', $classes);
-        $classes = array_map('trim', $classes);
+        $classes = array_map(trim(...), $classes);
         $classes = array_filter($classes);
         $classes = array_unique($classes);
 
@@ -583,7 +583,7 @@ EOD;
 
             $elClasses = (string)($simpleXml->attributes()->class ?? '');
             $elClasses = explode(' ', $elClasses);
-            $elClasses = array_map('trim', $elClasses);
+            $elClasses = array_map(trim(...), $elClasses);
             $elClasses = array_filter($elClasses);
             $elClasses = array_diff($elClasses, $classes);
             $elClasses = array_unique($elClasses);
@@ -618,14 +618,14 @@ EOD;
         }
 
         $classes = explode(' ', $classes);
-        $classes = array_map('trim', $classes);
+        $classes = array_map(trim(...), $classes);
         $classes = array_filter($classes);
         $classes = array_unique($classes);
 
         foreach ($this->html as $simpleXml) {
             $elClasses = (string)($simpleXml->attributes()->class ?? '');
             $elClasses = explode(' ', $elClasses);
-            $elClasses = array_map('trim', $elClasses);
+            $elClasses = array_map(trim(...), $elClasses);
             $elClasses = array_filter($elClasses);
             $elClasses = array_unique($elClasses);
 
@@ -806,7 +806,8 @@ EOD;
         $queryStrings = [];
 
         foreach ($arraySerialized as $element) {
-            $queryStrings[] = sprintf('%s=%s', urlencode($element['name']), urlencode($element['value']));
+            $queryStrings[] = sprintf('%s=%s', urlencode((string)$element['name']),
+                urlencode((string)$element['value']));
         }
 
         return implode('&', $queryStrings);

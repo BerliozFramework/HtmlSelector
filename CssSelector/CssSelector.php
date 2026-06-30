@@ -14,10 +14,12 @@ declare(strict_types=1);
 
 namespace Berlioz\HtmlSelector\CssSelector;
 
+use Stringable;
+
 /**
  * Class CssSelector.
  */
-class CssSelector
+class CssSelector implements Stringable
 {
     protected ?NextCssSelector $next = null;
 

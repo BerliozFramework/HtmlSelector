@@ -24,7 +24,7 @@ use SimpleXMLElement;
  */
 class HtmlLoader
 {
-    private SimpleXMLElement $xml;
+    private readonly SimpleXMLElement $xml;
 
     /**
      * HtmlLoader constructor.
