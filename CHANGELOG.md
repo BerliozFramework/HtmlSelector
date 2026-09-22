@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Preserve quotes and backslashes in XPath literals for attribute selectors and `:contains()` / `:lang()` arguments
+
+### Security
+
+- Encode XPath string literals safely and validate interpolated element/attribute names to prevent XPath injection
+
 ## [3.2.1] - 2026-09-11
 
 _No changes in this release._

@@ -87,40 +87,45 @@ class XpathSolver
     protected function solveUnique(CssSelector $selector, ?string $context = self::CONTEXT_ALL): string
     {
         // Type
-        $xpath = ($context ?? '') . ($selector->getType() ?: '*');
+        $type = $selector->getType() ?: '*';
+        if ('*' !== $type) {
+            $this->assertName($type);
+        }
+        $xpath = ($context ?? '') . $type;
 
         // ID
         if (null !== $selector->getId()) {
-            $xpath .= '[@id="' . addslashes($selector->getId()) . '"]';
+            $xpath .= '[@id=' . XpathLiteral::quote($selector->getId()) . ']';
         }
 
         // Classes
         foreach ($selector->getClasses() as $class) {
-            $xpath .= '[contains(concat(" ", @class, " "), " ' . addslashes($class) . ' ")]';
+            $xpath .= '[contains(concat(" ", @class, " "), ' . XpathLiteral::quote(' ' . $class . ' ') . ')]';
         }
 
         // Attributes
         foreach ($selector->getAttributes() as $attribute) {
+            $this->assertName($attribute['name']);
+            $value = XpathLiteral::quote((string)$attribute['value']);
             $xpath .= match ($attribute['comparison']) {
-                '=' => sprintf('[@%s="%s"]', $attribute['name'], addslashes((string)$attribute['value'])),
-                '^=' => sprintf('[starts-with(@%s, "%s")]', $attribute['name'],
-                    addslashes((string)$attribute['value'])),
+                '=' => sprintf('[@%s=%s]', $attribute['name'], $value),
+                '^=' => sprintf('[starts-with(@%s, %s)]', $attribute['name'], $value),
                 '$=' => sprintf(
-                    '["%2$s" = substring(@%1$s, string-length(@%1$s) - string-length("%2$s") + 1)]',
+                    '[%2$s = substring(@%1$s, string-length(@%1$s) - string-length(%2$s) + 1)]',
                     $attribute['name'],
-                    addslashes((string)$attribute['value'])
+                    $value,
                 ),
-                '*=' => sprintf('[contains(@%s, "%s")]', $attribute['name'], addslashes((string)$attribute['value'])),
-                '!=' => sprintf('[@%s!="%s"]', $attribute['name'], addslashes((string)$attribute['value'])),
+                '*=' => sprintf('[contains(@%s, %s)]', $attribute['name'], $value),
+                '!=' => sprintf('[@%s!=%s]', $attribute['name'], $value),
                 '~=' => sprintf(
-                    '[contains(concat(" ", @%s, " "), " %s ")]',
+                    '[contains(concat(" ", @%s, " "), %s)]',
                     $attribute['name'],
-                    addslashes((string)$attribute['value'])
+                    XpathLiteral::quote(' ' . $attribute['value'] . ' '),
                 ),
                 '|=' => sprintf(
-                    '[@%1$s = "%2$s" or starts-with(@%1$s, "%2$s")]',
+                    '[@%1$s = %2$s or starts-with(@%1$s, %2$s)]',
                     $attribute['name'],
-                    addslashes((string)$attribute['value'])
+                    $value,
                 ),
                 default => sprintf('[@%s]', $attribute['name']),
             };
@@ -141,5 +146,17 @@ class XpathSolver
         }
 
         return $xpath;
+    }
+
+    /**
+     * Validate a name before inserting it as an XPath node test.
+     *
+     * @throws SelectorException
+     */
+    private function assertName(string $name): void
+    {
+        if (1 !== preg_match('/\A[A-Za-z_][A-Za-z0-9_.-]*(?::[A-Za-z_][A-Za-z0-9_.-]*)?\z/', $name)) {
+            throw new SelectorException(sprintf('Invalid XPath name "%s"', $name));
+        }
     }
 }

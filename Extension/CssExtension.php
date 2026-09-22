@@ -19,6 +19,7 @@ use Berlioz\HtmlSelector\Exception\SelectorException;
 use Berlioz\HtmlSelector\HtmlSelector;
 use Berlioz\HtmlSelector\PseudoClass\Nth;
 use Berlioz\HtmlSelector\PseudoClass\PseudoClass;
+use Berlioz\HtmlSelector\XpathLiteral;
 use Berlioz\HtmlSelector\XpathSolver;
 
 /**
@@ -239,7 +240,7 @@ class CssExtension implements ExtensionInterface
      */
     public function lang(string $xpath, string $arguments): string
     {
-        return $xpath . sprintf('[@lang = "%1$s" or starts-with(@lang, "%1$s")]', addslashes($arguments));
+        return $xpath . sprintf('[@lang = %1$s or starts-with(@lang, %1$s)]', XpathLiteral::quote($arguments));
     }
 
     /**

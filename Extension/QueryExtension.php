@@ -16,6 +16,7 @@ namespace Berlioz\HtmlSelector\Extension;
 
 use Berlioz\HtmlSelector\HtmlSelector;
 use Berlioz\HtmlSelector\PseudoClass\PseudoClass;
+use Berlioz\HtmlSelector\XpathLiteral;
 
 /**
  * Class QueryExtension.
@@ -92,7 +93,7 @@ class QueryExtension implements ExtensionInterface
      */
     public function contains(string $xpath, string $arguments): string
     {
-        return $xpath . sprintf('[contains(text(), "%s")]', addslashes($arguments));
+        return $xpath . sprintf('[contains(text(), %s)]', XpathLiteral::quote($arguments));
     }
 
     /**
